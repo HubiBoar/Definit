@@ -1,6 +1,4 @@
-﻿using Explicit.Validation.Abstraction;
-
-namespace Explicit.Validation;
+﻿namespace Explicit.Validation;
 
 public sealed class IsValidArray<T> : OneOfBase<ValidArray<T>, ValidationErrors>, IValidatable
     where T : IValidatable

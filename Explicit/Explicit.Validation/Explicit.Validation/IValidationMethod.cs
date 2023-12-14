@@ -1,4 +1,4 @@
-﻿namespace Explicit.Validation.Abstraction;
+﻿namespace Explicit.Validation;
 
 public interface IValidationMethod<in TValue>
 {

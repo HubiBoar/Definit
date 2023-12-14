@@ -1,6 +1,4 @@
-﻿using Explicit.Validation.Abstraction;
-
-namespace Explicit.Validation;
+﻿namespace Explicit.Validation;
 
 public sealed record Valid;
 
