@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExplicitValidation", "ExplicitValidation\ExplicitValidation.csproj", "{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExplicitValidation", "ExplicitValidation", "{47336CDD-7014-4A30-A11E-B938881263AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExplicitValidation.Configuration", "ExplicitValidation.Configuration", "{661D4CDB-DBE0-4A0B-9589-D7B26ED7AEB5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExplicitValidation.Primitives", "ExplicitValidation.Primitives", "{3FB3DDE3-9D3D-41C0-9AF3-0F00E5509C40}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CDBB9C95-A1EE-4699-9E5A-FE7CD1595426} = {47336CDD-7014-4A30-A11E-B938881263AC}
+	EndGlobalSection
+EndGlobal
