@@ -1,39 +1,11 @@
-﻿using Explicit.Validation;
+﻿using Explicit.Utils;
+using Explicit.Utils.Json;
+using Explicit.Validation;
 using Newtonsoft.Json;
 
 namespace Explicit.Primitives;
 
-public interface IJsonStaticConvertable
-{
-    static abstract string ToJson(object obj);
-    
-    static abstract object FromJson(string json);
-
-    static abstract bool CanConvert(Type type);
-
-    internal static string ToJsonInternal(object obj)
-    {
-        return (string)obj.GetType().GetMethod(nameof(IJsonStaticConvertable.ToJson))!.Invoke(null, new[] {obj})!;
-    }
-    
-    internal static object FromJsonInternal(Type objectType, string json)
-    {
-        return objectType.GetMethod(nameof(IJsonStaticConvertable.FromJson))!.Invoke(null, new object?[] {json})!;
-    }
-    
-    internal static bool CanConvertInternal(Type objectType)
-    {
-        if (objectType.IsAssignableTo(typeof(IJsonStaticConvertable)))
-        {
-            return (bool)objectType.GetMethod(nameof(IJsonStaticConvertable.CanConvert))!.Invoke(null, new object?[] {objectType}) !;
-        }
-
-        return false;
-    }
-}
-
-[Newtonsoft.Json.JsonConverter(typeof(NewtonsoftStaticConverter))]
-[System.Text.Json.Serialization.JsonConverter(typeof(SystemJsonStaticConverter))]
+[StaticJsonConverter]
 public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable
     where TMethod : IValidationMethod<TValue>
 {

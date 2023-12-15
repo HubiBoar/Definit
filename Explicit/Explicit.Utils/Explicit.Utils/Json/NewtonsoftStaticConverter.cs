@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OneOf.Else;
 
-namespace Explicit.Primitives;
+namespace Explicit.Utils.Json;
 
 internal class NewtonsoftStaticConverter : JsonConverter
 {
@@ -10,7 +9,7 @@ internal class NewtonsoftStaticConverter : JsonConverter
     {
         if (obj is null) return;
 
-        var value = IJsonStaticConvertable.ToJsonInternal(obj);
+        var value = JsonStaticConvertableHelper.CallToJson(obj);
 
         writer.WriteRawValue(value);
     }
@@ -21,17 +20,17 @@ internal class NewtonsoftStaticConverter : JsonConverter
         {
             var json = reader.Value.ToString();
             var wrappedJson = JsonConvert.SerializeObject(json);
-            return IJsonStaticConvertable.FromJsonInternal(objectType, wrappedJson);
+            return JsonStaticConvertableHelper.CallFromJson(objectType, wrappedJson);
         }
         else
         {
             var json = JToken.Load(reader).ToString();
-            return IJsonStaticConvertable.FromJsonInternal(objectType, json);
+            return JsonStaticConvertableHelper.CallFromJson(objectType, json);
         }
     }
 
     public override bool CanConvert(Type objectType)
     {
-        return IJsonStaticConvertable.CanConvertInternal(objectType);
+        return JsonStaticConvertableHelper.CallCanConvert(objectType);
     }
 }
