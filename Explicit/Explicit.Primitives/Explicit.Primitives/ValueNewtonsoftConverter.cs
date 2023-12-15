@@ -1,26 +1,37 @@
-﻿// namespace ModulR.ValueWrapper;
-//
-// internal class ValueNewtonsoftConverter : Newtonsoft.Json.JsonConverter
-// {
-//     public override void WriteJson(JsonWriter writer, object? value, Newtonsoft.Json.JsonSerializer serializer)
-//     {
-//         if (value is not null)
-//         {
-//             writer.WriteValue(value.GetType().GetProperty("Value") !.GetValue(value));
-//         }
-//     }
-//
-//     public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, Newtonsoft.Json.JsonSerializer serializer)
-//     {
-//         var valueType = objectType.GetInterfaces().First(x => x.GetGenericTypeDefinition() == typeof(IValueWrapper<>));
-//         var type = valueType.GetGenericArguments()[0];
-//         var value = reader?.Value;
-//         var changedValue = Convert.ChangeType(value, type);
-//         return Activator.CreateInstance(objectType, changedValue);
-//     }
-//
-//     public override bool CanConvert(Type objectType)
-//     {
-//         return objectType.IsAssignableTo(typeof(IValueWrapper<>));
-//     }
-// }
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OneOf.Else;
+
+namespace Explicit.Primitives;
+
+internal class NewtonsoftStaticConverter : JsonConverter
+{
+    public override void WriteJson(JsonWriter writer, object? obj, JsonSerializer serializer)
+    {
+        if (obj is null) return;
+
+        var value = IJsonStaticConvertable.ToJsonInternal(obj);
+
+        writer.WriteRawValue(value);
+    }
+
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+    {
+        if (reader.Value is not null)
+        {
+            var json = reader.Value.ToString();
+            var wrappedJson = JsonConvert.SerializeObject(json);
+            return IJsonStaticConvertable.FromJsonInternal(objectType, wrappedJson);
+        }
+        else
+        {
+            var json = JToken.Load(reader).ToString();
+            return IJsonStaticConvertable.FromJsonInternal(objectType, json);
+        }
+    }
+
+    public override bool CanConvert(Type objectType)
+    {
+        return IJsonStaticConvertable.CanConvertInternal(objectType);
+    }
+}

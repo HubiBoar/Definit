@@ -1,30 +1,49 @@
-﻿// using System.Text.Json;
+﻿using System.Text.Json;
+
+namespace Explicit.Primitives;
+
+internal class SystemJsonStaticConverter : System.Text.Json.Serialization.JsonConverter<object>
+{
+    public override void Write(Utf8JsonWriter writer, object obj, JsonSerializerOptions options)
+    {
+        var value = IJsonStaticConvertable.ToJsonInternal(obj);
+
+        writer.WriteRawValue(value);
+    }
+
+    public override object? Read(ref Utf8JsonReader reader, Type objectType, JsonSerializerOptions options)
+    {
+        var json = JsonDocument.ParseValue(ref reader).RootElement.GetRawText();
+        return IJsonStaticConvertable.FromJsonInternal(objectType, json);
+    }
+
+    public override bool CanConvert(Type objectType)
+    {
+        return IJsonStaticConvertable.CanConvertInternal(objectType);
+    }
+}
 //
-// namespace ModulR.ValueWrapper;
-//
-// public class ValueSystemJsonConverter : System.Text.Json.Serialization.JsonConverter<IValueWrapper>
+// internal class ValueSystemJsonConverter : System.Text.Json.Serialization.JsonConverter<object>
 // {
-//     public override IValueWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+//     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
 //     {
-//         var valueType = typeToConvert.GetInterfaces().First(x => x.GetGenericTypeDefinition() == typeof(IValueWrapper<>));
-//         var type = valueType.GetGenericArguments()[0];
-//         var value = JsonDocument.ParseValue(ref reader).RootElement.Clone().Deserialize(type);
-//         var changedValue = Convert.ChangeType(value, type);
-//         return (IValueWrapper)Activator.CreateInstance(typeToConvert, changedValue) !;
+//         var valueType = value.GetType().GetGenericArguments()[0];
+//         JsonSerializer.Serialize(writer, value.ToString(), valueType, options);
+//     }
+//     
+//     public override object Read(ref Utf8JsonReader reader, Type objectType, JsonSerializerOptions options)
+//     {
+//         var valueType = objectType.GetGenericArguments()[0];
+//         var root = JsonDocument.ParseValue(ref reader).RootElement.ToString();
+//         //var converted = Newtonsoft.Json.JsonConvert.SerializeObject(root);
+//         var json = JsonDocument.ParseValue(ref reader).RootElement.Clone().Deserialize(valueType);
+//         var value = Convert.ChangeType(json, valueType);
+//         
+//         return Convert.ChangeType(value!, objectType);
 //     }
 //
-//     public override void Write(Utf8JsonWriter writer, IValueWrapper valueWrapper, JsonSerializerOptions options)
+//     public override bool CanConvert(Type objectType)
 //     {
-//         var valueType = valueWrapper.GetType().GetInterfaces().First(x => x.GetGenericTypeDefinition() == typeof(IValueWrapper<>));
-//         var type = valueType.GetGenericArguments()[0];
-//         var val = valueType.GetProperty("Value") !.GetValue(valueWrapper);
-//         System.Text.Json.JsonSerializer.Serialize(writer, val, type, options);
-//     }
-//
-//     public override bool CanConvert(Type typeToConvert)
-//     {
-//         var ret = typeToConvert.IsAssignableTo(typeof(IValueWrapper));
-//
-//         return ret;
+//         return ValueHelper.CompareTypes(objectType);
 //     }
 // }

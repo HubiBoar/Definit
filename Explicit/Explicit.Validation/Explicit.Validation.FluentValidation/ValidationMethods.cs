@@ -3,7 +3,7 @@ using Explicit.Validation;
 
 namespace Explicit.Validation.FluentValidation;
 
-public sealed class IsConnectionString : IFluentValidationMethodSelf<IsConnectionString, string>
+public sealed class IsConnectionString : IFluentValidationRuleMethod<IsConnectionString, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -11,7 +11,7 @@ public sealed class IsConnectionString : IFluentValidationMethodSelf<IsConnectio
     }
 }
 
-public sealed class IsEmail : IFluentValidationMethodSelf<IsEmail, string>
+public sealed class IsEmail : IFluentValidationRuleMethod<IsEmail, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -19,7 +19,7 @@ public sealed class IsEmail : IFluentValidationMethodSelf<IsEmail, string>
     }
 }
 
-public sealed class IsUrl : IFluentValidationMethodSelf<IsUrl, string>
+public sealed class IsUrl : IFluentValidationRuleMethod<IsUrl, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -27,7 +27,7 @@ public sealed class IsUrl : IFluentValidationMethodSelf<IsUrl, string>
     }
 }
 
-public sealed class IsJsonArrayOf<TMethod> : IFluentValidationMethodSelf<IsJsonArrayOf<TMethod>, string>
+public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonArrayOf<TMethod>, string>
     where TMethod : IValidationMethod<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
@@ -48,7 +48,7 @@ public sealed class IsJsonArrayOf<TMethod> : IFluentValidationMethodSelf<IsJsonA
     }
 }
 
-public sealed class IsCommaArrayOf<TMethod> : IFluentValidationMethodSelf<IsCommaArrayOf<TMethod>, string>
+public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsCommaArrayOf<TMethod>, string>
     where TMethod : IValidationMethod<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
@@ -67,7 +67,7 @@ public sealed class IsCommaArrayOf<TMethod> : IFluentValidationMethodSelf<IsComm
     }
 }
 
-public sealed class IsNotEmpty : IFluentValidationMethodSelf<IsNotEmpty, string>
+public sealed class IsNotEmpty : IFluentValidationRuleMethod<IsNotEmpty, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -75,7 +75,7 @@ public sealed class IsNotEmpty : IFluentValidationMethodSelf<IsNotEmpty, string>
     }
 }
 
-public sealed class IsNotNull<TValue> : IFluentValidationMethodSelf<IsNotNull<TValue>, TValue>
+public sealed class IsNotNull<TValue> : IFluentValidationRuleMethod<IsNotNull<TValue>, TValue>
     where TValue : notnull
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, TValue> ruleBuilder)

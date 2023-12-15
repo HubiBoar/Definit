@@ -1,6 +1,4 @@
-﻿using Explicit.Validation;
-
-namespace Explicit.Validation.FluentValidation;
+﻿namespace Explicit.Validation.FluentValidation;
 
 public interface IFluentValidationRule<TValue>
 {
@@ -25,10 +23,10 @@ public interface IFluentValidationMethod<TRule, in TValue> : IValidationMethod<T
     }
 }
 
-public interface IFluentValidationMethodSelf<TSelf, TValue> : 
+public interface IFluentValidationRuleMethod<TSelf, TValue> : 
     IFluentValidationMethod<TSelf, TValue>,
     IFluentValidationRule<TValue>
-    where TSelf : IFluentValidationMethodSelf<TSelf, TValue>
+    where TSelf : IFluentValidationRuleMethod<TSelf, TValue>
     where TValue : notnull
 {
 }
