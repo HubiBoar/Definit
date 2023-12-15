@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Explicit.Utils.Json;
 
-public sealed class StaticJsonConverterAttribute : JsonConverterAttribute
+public sealed class JsonStaticConverterAttribute : JsonConverterAttribute
 {
-    public StaticJsonConverterAttribute() : base(typeof(SystemJsonStaticConverter))
+    public JsonStaticConverterAttribute() : base(typeof(SystemJsonStaticConverter))
     {
     }
 }

@@ -1,14 +1,11 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Explicit.Utils.Json;
+﻿namespace Explicit.Utils.Json;
 
 [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftStaticConverter))]
-[JsonConverter(typeof(SystemJsonStaticConverter))]
-public interface IJsonStaticConvertable
+[JsonStaticConverter]
+public interface IJsonStaticConvertable<TSelf>
+    where TSelf : IJsonStaticConvertable<TSelf>
 {
-    static abstract string ToJson(object obj);
+    static abstract string ToJson(TSelf obj);
     
-    static abstract object FromJson(string json);
-
-    static abstract bool CanConvert(Type type);
+    static abstract TSelf FromJson(string json);
 }

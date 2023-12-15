@@ -1,12 +1,11 @@
-﻿using Explicit.Utils;
-using Explicit.Utils.Json;
+﻿using Explicit.Utils.Json;
 using Explicit.Validation;
 using Newtonsoft.Json;
 
 namespace Explicit.Primitives;
 
-[StaticJsonConverter]
-public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable
+[JsonStaticConverter]
+public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable<Value<TValue, TMethod>>
     where TMethod : IValidationMethod<TValue>
 {
     private readonly TValue _value;
@@ -35,18 +34,16 @@ public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertabl
         return self._value;
     }
 
-    public static object FromJson(string json)
+    public static string ToJson(Value<TValue, TMethod> value)
+    {
+        return JsonConvert.SerializeObject(value!._value);
+    }
+
+    public static Value<TValue, TMethod> FromJson(string json)
     {
         var value = JsonConvert.DeserializeObject<TValue>(json)!;
 
         return new Value<TValue, TMethod>(value);
-    }
-
-    public static string ToJson(object obj)
-    {
-        var value = obj as Value<TValue, TMethod>;
-
-        return JsonConvert.SerializeObject(value!._value);
     }
 
     public static bool CanConvert(Type type)
