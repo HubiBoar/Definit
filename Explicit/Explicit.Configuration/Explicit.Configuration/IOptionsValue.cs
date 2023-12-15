@@ -10,8 +10,9 @@ public interface IHoldValue<TValue>
     public TValue Value { get; init; }
 }
 
-public interface IOptionsValueBase<TValue> : IOptionsObject, IHoldValue<TValue>, IOptionsConfiguration<IHoldValue<TValue>>
+public interface IOptionsValue<TValue, TMethod> : IOptionsObject, IHoldValue<TValue>, IOptionsConfiguration<IHoldValue<TValue>>
     where TValue : notnull
+    where TMethod : IValidationMethod<TValue>
 {
     static void IOptionsConfiguration<IHoldValue<TValue>>.Configure<TOptions>(
         OptionsBuilder<TOptions> configure,
@@ -29,12 +30,7 @@ public interface IOptionsValueBase<TValue> : IOptionsObject, IHoldValue<TValue>,
         var value = configuration.Get<TValue>();
         GetType().GetProperty(nameof(Value))!.SetValue(this, value);
     }
-}
-
-public interface IOptionsValue<TValue, TMethod> : IOptionsValueBase<TValue>
-    where TValue : notnull
-    where TMethod : IValidationMethod<TValue>
-{
+    
     SectionValue IOptionsObject.ConvertToSection()
     {
         return new SectionValue(Value);

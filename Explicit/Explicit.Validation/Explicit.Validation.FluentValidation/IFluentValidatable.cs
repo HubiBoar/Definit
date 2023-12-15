@@ -1,6 +1,4 @@
-﻿using Explicit.Validation;
-
-namespace Explicit.Validation.FluentValidation;
+﻿namespace Explicit.Validation.FluentValidation;
 
 public interface IFluentValidatable<TSelf> : IFluentValidatableSetup<TSelf>, IValidatable, IValidationMethod<TSelf>
     where TSelf : IFluentValidatable<TSelf>
