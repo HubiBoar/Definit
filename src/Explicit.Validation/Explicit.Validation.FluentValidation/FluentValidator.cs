@@ -1,38 +1,17 @@
-﻿using Explicit.Validation;
-using MoreLinq.Extensions;
+﻿using MoreLinq.Extensions;
 
 namespace Explicit.Validation.FluentValidation;
 
-public sealed class FluentValidator<T> : AbstractValidator<T>
-    where T : notnull
+public sealed class FluentValidator<TValue> : AbstractValidator<TValue>, IValidate<TValue>
+    where TValue : notnull
 {
-    internal FluentValidator(T validatable)
-    {
-        var validatableType = validatable.GetType();
-        
-        var validatableProperties = validatableType
-            .GetProperties()
-            .Where(x => x.PropertyType.IsAssignableTo(typeof(IValidatable)))
-            .ToArray();
-    
-        foreach (var property in validatableProperties)
-        {
-            RuleFor(x => (IValidatable)property.GetValue(x)!).Custom((v, context) =>
-            {
-                var errors = v.IsValid().Match<IReadOnlyCollection<string>>(
-                    _ => Array.Empty<string>(),
-                    errors => errors.ValidationErrors.ErrorMessages);
-
-                foreach (var error in errors)
-                {
-                    context.AddFailure(new ValidationFailure(property.Name, error));
-                }
-            });
-        }
-    }
-
     internal FluentValidator()
     {
+    }
+
+    public static OneOf<Success, ValidationErrors> Validate(Validator<TValue> context)
+    {
+        
     }
 }
 
@@ -51,8 +30,8 @@ public static class FluentValidator
     
     public static void ValidateCollection<TFrom, TMethod, TValue>(
         IReadOnlyCollection<TValue> collection,
-        ValidationContext<TFrom> context)
-        where TMethod : IValidationMethod<TValue>
+        Validator<TFrom> context)
+        where TMethod : IValidate<TValue>
     {
         collection.ForEach((property, propertyIndex) =>
         {

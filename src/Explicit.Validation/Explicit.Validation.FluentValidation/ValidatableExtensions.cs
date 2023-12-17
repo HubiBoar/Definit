@@ -6,13 +6,13 @@ public static class ValidatableExtensions
 {
     public static IRuleBuilderOptionsConditions<T, TProperty> ValidateSelf<T, TProperty>(
         this IRuleBuilderOptions<T, TProperty> builder)
-        where TProperty : IValidatable
+        where TProperty : IValidate<TProperty>
     {
         return builder.Custom((validatable, context) =>
         {
             var errors = validatable.IsValid().Match<IReadOnlyCollection<string>>(
                 _ => Array.Empty<string>(),
-                errors => errors.ValidationErrors.ErrorMessages);
+                errors => errors.ErrorMessages);
             
             foreach (var error in errors)
             {
@@ -29,7 +29,7 @@ public static class ValidatableExtensions
         {
             var errors = validatable.IsValid().Match<IReadOnlyCollection<string>>(
                 _ => Array.Empty<string>(),
-                errors => errors.ValidationErrors.ErrorMessages);
+                errors => errors.ErrorMessages);
             
             foreach (var error in errors)
             {

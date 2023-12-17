@@ -2,15 +2,15 @@
 
 public static class IsValidExtensions
 {
-    public static IsValid<T> IsValid<T>(this T request)
-        where T : IValidatable
+    public static IsValid<TValue> IsValid<TValue>(this TValue value)
+        where TValue : IValidate<TValue>
     {
-        return Validation.IsValid<T>.Create(request);
+        return Validator<TValue>.IsValid<TValue>(value);
     }
     
-    public static IsValidArray<T> IsValid<T>(this IEnumerable<T> requests)
-        where T : IValidatable
+    public static IReadOnlyCollection<IsValid<TValue>> IsValid<TValue>(this IEnumerable<TValue> values)
+        where TValue : IValidate<TValue>
     {
-        return IsValidArray<T>.Create(requests);
+        return Validator<TValue>.IsValid<TValue>(values);
     }
 }

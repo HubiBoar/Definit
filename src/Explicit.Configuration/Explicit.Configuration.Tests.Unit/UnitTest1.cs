@@ -1,4 +1,3 @@
-using Explicit.Configuration.FluentValidation;
 using Explicit.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +25,5 @@ public class ConfigurationTests
         var services = new ServiceCollection();
         var configuration = Substitute.For<IConfigurationManager>();
         AddOptionsHelper.AddOptions<TestSection>(services, configuration);
-        
-        services.Should
     }
 }

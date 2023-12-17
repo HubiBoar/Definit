@@ -4,7 +4,7 @@ namespace Explicit.Primitives.Tests.Unit;
 
 internal class ExampleClass : IFluentValidatable<ExampleClass>
 {
-    public Value<string, IsConnectionString> ConnectionString { get; }
+    public Value<IsConnectionString> ConnectionString { get; }
     
     public Value<string, IsEmail> Email { get; }
 

@@ -12,7 +12,7 @@ public interface IHoldValue<TValue>
 
 public interface IOptionsValue<TValue, TMethod> : IOptionsObject, IHoldValue<TValue>, IOptionsConfiguration<IHoldValue<TValue>>
     where TValue : notnull
-    where TMethod : IValidationMethod<TValue>
+    where TMethod : IValidate<TValue>
 {
     static void IOptionsConfiguration<IHoldValue<TValue>>.Configure<TOptions>(
         OptionsBuilder<TOptions> configure,

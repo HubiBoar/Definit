@@ -2,75 +2,54 @@
 
 public sealed record Valid;
 
-public sealed class Valid<T>
-    where T : IValidatable
+public sealed class Valid<TValue>
+    where TValue : notnull
 {
-    public T ValidValue { get; }
+    public TValue ValidValue { get; }
 
-    internal Valid(T validValue)
+    internal Valid(TValue validValue)
     {
         ValidValue = validValue;
     }
 
-    public Valid<TParam> GetParameter<TParam>(Func<T, TParam> getParameter)
-        where TParam : IValidatable
+    public Valid<TParam> GetParameter<TParam>(Func<TValue, TParam> getParameter)
+        where TParam : notnull
     {
         return new Valid<TParam>(getParameter(ValidValue));
     }
 
-    public static explicit operator T(Valid<T> valid)
+    public static explicit operator TValue(Valid<TValue> valid)
     {
         return valid.ValidValue;
     }
 
-    public static explicit operator Valid(Valid<T> valid)
+    public static explicit operator Valid(Valid<TValue> valid)
     {
         return new Valid();
     }
 }
 
-public sealed class InValid<T>
-    where T : IValidatable
+public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
+    where TValue : notnull
 {
-    public ValidationErrors ValidationErrors { get; }
-
-    public string Message => ValidationErrors.Message;
+    public OneOf<TValue, ValidationErrors> Basic => Match<OneOf<TValue, ValidationErrors>>(v => v.ValidValue, e => e);
     
-    public T InValidValue { get; }
-
-    internal InValid(ValidationErrors validationErrors, T inValidValue)
-    {
-        ValidationErrors = validationErrors;
-        InValidValue = inValidValue;
-    }
-
-    public static explicit operator ValidationErrors(InValid<T> valid)
-    {
-        return valid.ValidationErrors;
-    }
-}
-
-public sealed class IsValid<T> : OneOfBase<Valid<T>, InValid<T>>
-    where T : IValidatable
-{
-    public OneOf<T, ValidationErrors> Basic => Match<OneOf<T, ValidationErrors>>(v => v.ValidValue, e => e.ValidationErrors);
-    
-    private IsValid(Valid<T> value)
+    private IsValid(Valid<TValue> value)
         : base(value)
     {
     }
 
-    private IsValid(InValid<T> inValid)
-        : base(inValid)
+    private IsValid(ValidationErrors validationErrors)
+        : base(validationErrors)
     {
     }
 
-    public static IsValid<T> Create(T validatable)
+    public static IsValid<TValue> Create(TValue validatable, Func<TValue, OneOf<Success, ValidationErrors>> validationMethod)
     {
-        var validationResult = validatable.Validate();
+        var validationResult = validationMethod(validatable);
 
-        return validationResult.Match<IsValid<T>>(
-            success => new IsValid<T>(new Valid<T>(validatable)),
-            errors => new IsValid<T>(new InValid<T>(errors, validatable)));
+        return validationResult.Match<IsValid<TValue>>(
+            success => new IsValid<TValue>(new Valid<TValue>(validatable)),
+            errors => new IsValid<TValue>(errors));
     }
 }

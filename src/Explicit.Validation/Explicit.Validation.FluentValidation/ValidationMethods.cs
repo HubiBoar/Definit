@@ -28,7 +28,7 @@ public sealed class IsUrl : IFluentValidationRuleMethod<IsUrl, string>
 }
 
 public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonArrayOf<TMethod>, string>
-    where TMethod : IValidationMethod<string>
+    where TMethod : IValidate<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -49,7 +49,7 @@ public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonA
 }
 
 public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsCommaArrayOf<TMethod>, string>
-    where TMethod : IValidationMethod<string>
+    where TMethod : IValidate<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {

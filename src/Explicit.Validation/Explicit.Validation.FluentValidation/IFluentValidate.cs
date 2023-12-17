@@ -5,11 +5,11 @@ public interface IFluentValidationRule<TValue>
     public static abstract void SetupValidation<TFrom>(RuleBuilder<TFrom, TValue> ruleBuilder);
 }
 
-public interface IFluentValidationMethod<TRule, in TValue> : IValidationMethod<TValue>
+public interface IFluentValidate<TRule, in TValue> : IValidate<TValue>
     where TRule : IFluentValidationRule<TValue>
     where TValue : notnull
 {
-    static OneOf<Success, ValidationErrors> IValidationMethod<TValue>.Validate(TValue value)
+    static OneOf<Success, ValidationErrors> IValidate<TValue>.Validate(TValue value)
     {
         var fluentValidator = new FluentValidator<TValue>();
 
@@ -24,7 +24,7 @@ public interface IFluentValidationMethod<TRule, in TValue> : IValidationMethod<T
 }
 
 public interface IFluentValidationRuleMethod<TSelf, TValue> : 
-    IFluentValidationMethod<TSelf, TValue>,
+    IFluentValidate<TSelf, TValue>,
     IFluentValidationRule<TValue>
     where TSelf : IFluentValidationRuleMethod<TSelf, TValue>
     where TValue : notnull
