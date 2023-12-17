@@ -1,19 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>$(Dotnet)</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="11.8.0" />
-        <PackageReference Include="morelinq" Version="4.0.0" />
-        <PackageReference Include="OneOf" Version="3.0.263" />
+        <PackageReference Include="Newtonsoft.Json"/>
+        <PackageReference Include="OneOf"/>
+        <PackageReference Include="OneOf.Else"/>
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Explicit.Utils\Explicit.Utils\Explicit.Utils.csproj" />
       <ProjectReference Include="..\..\Explicit.Validation\Explicit.Validation\Explicit.Validation.csproj" />
     </ItemGroup>
-    
+
 </Project>

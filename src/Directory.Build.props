@@ -1,0 +1,22 @@
+<Project>
+
+    <PropertyGroup>
+        <Authors>Hubert Dzikuc</Authors>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/HubiBoar/Explicit</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/HubiBoar/Explicit</RepositoryUrl>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="" Visible="false" />
+        <None Include="../../LICENSE" Pack="true" PackagePath="" Visible="false" />
+    </ItemGroup>
+    
+    <!-- Version="$(MicrosoftExtensionsVersions)" -->
+    <PropertyGroup>
+        <Dotnet>net8.0</Dotnet>
+        <MicrosoftExtensionsVersions>8.0.0</MicrosoftExtensionsVersions>
+    </PropertyGroup>
+</Project>

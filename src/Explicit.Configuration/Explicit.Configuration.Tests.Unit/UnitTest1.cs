@@ -26,5 +26,7 @@ public class ConfigurationTests
         var services = new ServiceCollection();
         var configuration = Substitute.For<IConfigurationManager>();
         AddOptionsHelper.AddOptions<TestSection>(services, configuration);
+        
+        services.Should
     }
 }

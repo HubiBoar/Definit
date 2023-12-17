@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Explicit.Primitives;
 
-[JsonStaticConverter]
+[SystemJsonStaticConverter]
 public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable<Value<TValue, TMethod>>
     where TMethod : IValidationMethod<TValue>
 {

@@ -3,14 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace Explicit.Utils.Json;
 
-public sealed class JsonStaticConverterAttribute : JsonConverterAttribute
+public sealed class SystemJsonStaticConverterAttribute : JsonConverterAttribute
 {
-    public JsonStaticConverterAttribute() : base(typeof(SystemJsonStaticConverter))
+    public SystemJsonStaticConverterAttribute() : base(typeof(SystemJsonStaticConverter))
     {
     }
 }
 
-internal class SystemJsonStaticConverter : System.Text.Json.Serialization.JsonConverter<object>
+internal class SystemJsonStaticConverter : JsonConverter<object>
 {
     public override void Write(Utf8JsonWriter writer, object obj, JsonSerializerOptions options)
     {

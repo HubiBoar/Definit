@@ -1,7 +1,7 @@
 ﻿namespace Explicit.Utils.Json;
 
 [Newtonsoft.Json.JsonConverter(typeof(NewtonsoftStaticConverter))]
-[JsonStaticConverter]
+[SystemJsonStaticConverter]
 public interface IJsonStaticConvertable<TSelf>
     where TSelf : IJsonStaticConvertable<TSelf>
 {
