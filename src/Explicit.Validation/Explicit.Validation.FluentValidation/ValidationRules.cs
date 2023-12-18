@@ -2,16 +2,17 @@
 
 public static class ValidationRules
 {
-    public static void UseValidationMethod<TFrom, TMethod>(this RuleBuilder<TFrom, string> rule)
-        where TMethod : IFluentValidationRule<string>
+    public static void UseValidationMethod<TFrom, TMethod>(this IRuleBuilder<TFrom, string> rule)
+        where TMethod : IValidate<string>
     {
-        TMethod.SetupValidation(rule);
+        rule.ValidateSelf<TFrom, string, TMethod>();
     }
 
-    public static void UseValidationMethod<TFrom, TMethod, TValue>(this RuleBuilder<TFrom, TValue> rule)
-        where TMethod : IFluentValidationRule<TValue>
+    public static void UseValidationMethod<TFrom, TValue, TMethod>(this IRuleBuilder<TFrom, TValue> rule)
+        where TMethod : IValidate<TValue>
+        where TValue : notnull
     {
-        TMethod.SetupValidation(rule);
+        rule.ValidateSelf<TFrom, TValue, TMethod>();
     }
     
     public static void IsConnectionString<TFrom>(this IRuleBuilder<TFrom, string> rule)

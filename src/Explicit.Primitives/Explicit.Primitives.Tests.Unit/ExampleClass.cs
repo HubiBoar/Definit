@@ -1,10 +1,14 @@
-﻿using Explicit.Validation.FluentValidation;
+﻿using Explicit.Validation;
+using Explicit.Validation.FluentValidation;
+using FluentValidation;
+using OneOf;
+using OneOf.Types;
 
 namespace Explicit.Primitives.Tests.Unit;
 
-internal class ExampleClass : IFluentValidatable<ExampleClass>
+internal class ExampleClass : IValidate<ExampleClass>
 {
-    public Value<IsConnectionString> ConnectionString { get; }
+    public Value<string, IsConnectionString> ConnectionString { get; }
     
     public Value<string, IsEmail> Email { get; }
 
@@ -14,12 +18,15 @@ internal class ExampleClass : IFluentValidatable<ExampleClass>
         Email = email;
     }
 
-    public static void SetupValidation(FluentValidator<ExampleClass> validator)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<ExampleClass> context)
     {
-        validator.RuleFor(x => x.ConnectionString)
-            .ValidateSelf();
-        
-        validator.RuleFor(x => x.Email)
-            .ValidateSelf();
+        return context.Fluent(validator =>
+        {
+            validator.RuleFor(x => x.ConnectionString)
+                .NotEmpty();
+
+            validator.RuleFor(x => x.Email)
+                .NotEmpty();
+        });
     }
 }

@@ -1,33 +1,29 @@
-﻿using Explicit.Validation;
-
-namespace Explicit.Validation.FluentValidation;
+﻿namespace Explicit.Validation.FluentValidation;
 
 public static class ValidatableExtensions
 {
-    public static IRuleBuilderOptionsConditions<T, TProperty> ValidateSelf<T, TProperty>(
-        this IRuleBuilderOptions<T, TProperty> builder)
-        where TProperty : IValidate<TProperty>
+    public static IRuleBuilderOptionsConditions<T, TValue> ValidateSelf<T, TValue>(
+        this IRuleBuilder<T, TValue> builder)
+        where TValue : IValidate<TValue>
     {
-        return builder.Custom((validatable, context) =>
-        {
-            var errors = validatable.IsValid().Match<IReadOnlyCollection<string>>(
-                _ => Array.Empty<string>(),
-                errors => errors.ErrorMessages);
-            
-            foreach (var error in errors)
-            {
-                context.AddFailure(error);
-            }
-        });
+        return builder.ValidateSelf<T, TValue, TValue>();
+    }
+    
+    public static IRuleBuilderOptionsConditions<T, TValue> ValidateSelf<T, TValue>(
+        this IRuleBuilderOptions<T, TValue> builder)
+        where TValue : IValidate<TValue>
+    {
+        return builder.ValidateSelf<T, TValue, TValue>();
     }
 
-    public static IRuleBuilderOptionsConditions<T, TProperty> ValidateSelf<T, TProperty>(
-        this IRuleBuilder<T, TProperty> builder)
-        where TProperty : IValidatable
+    public static IRuleBuilderOptionsConditions<T, TValue> ValidateSelf<T, TValue, TMethod>(
+        this IRuleBuilder<T, TValue> builder)
+        where TValue : notnull
+        where TMethod : IValidate<TValue>
     {
         return builder.Custom((validatable, context) =>
         {
-            var errors = validatable.IsValid().Match<IReadOnlyCollection<string>>(
+            var errors = Validator<TValue>.Validate<TMethod>(validatable).Match<IReadOnlyCollection<string>>(
                 _ => Array.Empty<string>(),
                 errors => errors.ErrorMessages);
             

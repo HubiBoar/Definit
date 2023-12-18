@@ -1,17 +1,41 @@
 ﻿using System.Text.Json;
-using Explicit.Validation;
 
 namespace Explicit.Validation.FluentValidation;
 
-public sealed class IsConnectionString : IFluentValidationRuleMethod<IsConnectionString, string>
+public interface IFluentValidationRule<TMethod, TValue>
+    where TMethod : IFluentValidationRule<TMethod, TValue>
+    where TValue : notnull
+{
+    static OneOf<Success, ValidationErrors> IValidate<TValue>.Validate(Validator<TValue> context)
+    {
+        var fluentValidator = new FluentValidator<TValue>();
+
+        var rule = fluentValidator.RuleFor(from => context.Value);
+
+        TMethod.SetupValidation(new RuleBuilder<TValue, TValue>(rule));
+
+        rule.Must(x => true).WithName("Value");
+
+        return fluentValidator.Validate(context.Value).ToResult();
+    }
+
+    static abstract void SetupValidation<TFrom>(RuleBuilder<TFrom, TValue> ruleBuilder);
+}
+
+public sealed class IsConnectionString : IFluentValidationRule<IsConnectionString, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
         ruleBuilder.NotEmpty().MinimumLength(4);
     }
+
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    {
+        return context.FluentRule(r => r.NotEmpty().MinimumLength(4));
+    }
 }
 
-public sealed class IsEmail : IFluentValidationRuleMethod<IsEmail, string>
+public sealed class IsEmail : IFluentValidationRule<IsEmail, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -19,7 +43,7 @@ public sealed class IsEmail : IFluentValidationRuleMethod<IsEmail, string>
     }
 }
 
-public sealed class IsUrl : IFluentValidationRuleMethod<IsUrl, string>
+public sealed class IsUrl : IFluentValidationRule<IsUrl, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -27,7 +51,7 @@ public sealed class IsUrl : IFluentValidationRuleMethod<IsUrl, string>
     }
 }
 
-public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonArrayOf<TMethod>, string>
+public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRule<IsJsonArrayOf<TMethod>, string>
     where TMethod : IValidate<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
@@ -48,7 +72,7 @@ public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonA
     }
 }
 
-public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsCommaArrayOf<TMethod>, string>
+public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRule<IsCommaArrayOf<TMethod>, string>
     where TMethod : IValidate<string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
@@ -67,7 +91,7 @@ public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsComm
     }
 }
 
-public sealed class IsNotEmpty : IFluentValidationRuleMethod<IsNotEmpty, string>
+public sealed class IsNotEmpty : IFluentValidationRule<IsNotEmpty, string>
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
     {
@@ -75,7 +99,7 @@ public sealed class IsNotEmpty : IFluentValidationRuleMethod<IsNotEmpty, string>
     }
 }
 
-public sealed class IsNotNull<TValue> : IFluentValidationRuleMethod<IsNotNull<TValue>, TValue>
+public sealed class IsNotNull<TValue> : IFluentValidationRule<IsNotNull<TValue>, TValue>
     where TValue : notnull
 {
     public static void SetupValidation<TFrom>(RuleBuilder<TFrom, TValue> ruleBuilder)

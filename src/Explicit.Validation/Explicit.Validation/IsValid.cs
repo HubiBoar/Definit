@@ -3,7 +3,7 @@
 public sealed record Valid;
 
 public sealed class Valid<TValue>
-    where TValue : notnull
+    where TValue : IValidate<TValue>
 {
     public TValue ValidValue { get; }
 
@@ -13,7 +13,7 @@ public sealed class Valid<TValue>
     }
 
     public Valid<TParam> GetParameter<TParam>(Func<TValue, TParam> getParameter)
-        where TParam : notnull
+        where TParam : IValidate<TParam>
     {
         return new Valid<TParam>(getParameter(ValidValue));
     }
@@ -30,10 +30,8 @@ public sealed class Valid<TValue>
 }
 
 public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
-    where TValue : notnull
+    where TValue : IValidate<TValue>
 {
-    public OneOf<TValue, ValidationErrors> Basic => Match<OneOf<TValue, ValidationErrors>>(v => v.ValidValue, e => e);
-    
     private IsValid(Valid<TValue> value)
         : base(value)
     {
@@ -44,9 +42,9 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
     {
     }
 
-    public static IsValid<TValue> Create(TValue validatable, Func<TValue, OneOf<Success, ValidationErrors>> validationMethod)
+    public static IsValid<TValue> Create(TValue validatable)
     {
-        var validationResult = validationMethod(validatable);
+        var validationResult = validatable.Validate();
 
         return validationResult.Match<IsValid<TValue>>(
             success => new IsValid<TValue>(new Valid<TValue>(validatable)),

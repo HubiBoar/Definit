@@ -4,9 +4,15 @@ using Newtonsoft.Json;
 
 namespace Explicit.Primitives;
 
+public interface IValidateValue<TValue>
+{
+    OneOf<Success, ValidationErrors> Validate()
+}
+
 [SystemJsonStaticConverter]
-public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable<Value<TValue, TMethod>>
-    where TMethod : IValidate<TValue>
+public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>, IJsonStaticConvertable<Value<TValue, TMethod>>
+    where TMethod : IValidateValue<TValue>
+    where TValue : notnull
 {
     private readonly TValue _value;
 
@@ -17,12 +23,12 @@ public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertabl
 
     public TValue GetValue() => _value;
 
-    public override string? ToString() => JsonConvert.SerializeObject(_value);
-
-    public OneOf<Success, ValidationErrors> Validate()
+    public static OneOf<Success, ValidationErrors> Validate(Validator<Value<TValue, TMethod>> context)
     {
-        return TMethod.Validate(_value);
+        return Validator<TValue>.Validate<TMethod>(context.Value.GetValue());
     }
+
+    public override string? ToString() => JsonConvert.SerializeObject(_value);
 
     public static implicit operator Value<TValue, TMethod>(TValue value)
     {
@@ -49,53 +55,5 @@ public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertabl
     public static bool CanConvert(Type type)
     {
         return type == typeof(Value<TValue, TMethod>);
-    }
-}
-
-[SystemJsonStaticConverter]
-public sealed class Value<TMethod> : IValidatable, IJsonStaticConvertable<Value<TMethod>>
-    where TMethod : IValidate<string>
-{
-    private readonly string _value;
-
-    public Value(string value)
-    {
-        _value = value;
-    }
-
-    public string GetValue() => _value;
-
-    public override string? ToString() => JsonConvert.SerializeObject(_value);
-
-    public OneOf<Success, ValidationErrors> Validate()
-    {
-        return TMethod.Validate(_value);
-    }
-
-    public static implicit operator Value<TMethod>(string value)
-    {
-        return new Value<TMethod>(value);
-    }
-
-    public static implicit operator string(Value<TMethod> self)
-    {
-        return self._value;
-    }
-
-    public static string ToJson(Value<TMethod> value)
-    {
-        return JsonConvert.SerializeObject(value!._value);
-    }
-
-    public static Value<TMethod> FromJson(string json)
-    {
-        var value = JsonConvert.DeserializeObject<string>(json)!;
-
-        return new Value<TMethod>(value);
-    }
-
-    public static bool CanConvert(Type type)
-    {
-        return type == typeof(Value<TMethod>);
     }
 }
