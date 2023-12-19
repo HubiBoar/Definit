@@ -12,7 +12,7 @@ public interface IConfigHolder<TSection>
 
 public interface IConfigHolder<TValue, TSection>
     where TValue : notnull
-    where TSection : IConfigValue<TValue, TSection>
+    where TSection : IConfigValue<TValue>, IValidate<TValue>
 {
     IsValid<Value<TValue, TSection>> Get();
 }
@@ -37,7 +37,7 @@ internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
 
 internal sealed class ConfigHolder<TValue, TSection> : IConfigHolder<TValue, TSection>
     where TValue : notnull
-    where TSection : IConfigValue<TValue, TSection>
+    where TSection : IConfigValue<TValue>, IValidate<TValue>
 {
     private IConfiguration Configuration { get; }
 

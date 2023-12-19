@@ -26,3 +26,17 @@ public class ExampleConfigValue : IConfigValue<string, IsCommaArrayOf<IsConnecti
 {
     public static string SectionName { get; } = "ExampleConfigValue";
 }
+
+public class ExampleDependency
+{
+    public IConfigHolder<string, ExampleConfigValue> Value { get; }
+
+    public IConfigHolder<ExampleConfigSection> Section { get; }
+    
+    public ExampleDependency(IConfigHolder<string, ExampleConfigValue> value, IConfigHolder<ExampleConfigSection> section)
+    {
+        Value = value;
+        Section = section;
+    }
+
+}
