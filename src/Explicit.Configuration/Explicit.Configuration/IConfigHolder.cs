@@ -1,27 +1,28 @@
-﻿using Explicit.Validation.NewFluent.Primitives;
+﻿using Explicit.Primitives;
+using Explicit.Validation;
 using Microsoft.Extensions.Configuration;
 
-namespace Explicit.Validation.NewFluent.Configuration;
+namespace Explicit.Configuration;
 
-public interface IOptionsHolder<TSection>
-    where TSection : class, ISectionName, IValidate<TSection>
+public interface IConfigHolder<TSection>
+    where TSection : ISectionName, IValidate<TSection>
 {
     IsValid<TSection> Get();
 }
 
-public interface IOptionsHolder<TValue, TSection>
+public interface IConfigHolder<TValue, TSection>
     where TValue : notnull
-    where TSection : ISectionName, IValidationRule<TValue>
+    where TSection : IConfigValue<TValue, TSection>
 {
     IsValid<Value<TValue, TSection>> Get();
 }
 
-internal sealed class OptionsHolder<TSection> : IOptionsHolder<TSection>
-    where TSection : class, ISectionName, IValidate<TSection>
+internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
+    where TSection : ISectionName, IValidate<TSection>
 {
     private IConfiguration Configuration { get; }
 
-    public OptionsHolder(IConfiguration configuration)
+    public ConfigHolder(IConfiguration configuration)
     {
         Configuration = configuration;
     }
@@ -34,13 +35,13 @@ internal sealed class OptionsHolder<TSection> : IOptionsHolder<TSection>
     }
 }
 
-internal sealed class OptionsHolder<TValue, TSection> : IOptionsHolder<TValue, TSection>
+internal sealed class ConfigHolder<TValue, TSection> : IConfigHolder<TValue, TSection>
     where TValue : notnull
-    where TSection : ISectionName, IValidationRule<TValue>
+    where TSection : IConfigValue<TValue, TSection>
 {
     private IConfiguration Configuration { get; }
 
-    public OptionsHolder(IConfiguration configuration)
+    public ConfigHolder(IConfiguration configuration)
     {
         Configuration = configuration;
     }

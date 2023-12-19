@@ -1,4 +1,4 @@
-﻿namespace Explicit.Validation.NewFluent.Configuration;
+﻿namespace Explicit.Configuration;
 
 public interface ISectionName
 {

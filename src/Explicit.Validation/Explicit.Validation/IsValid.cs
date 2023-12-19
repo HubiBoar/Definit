@@ -1,53 +1,36 @@
 ﻿namespace Explicit.Validation;
 
-public sealed record Valid;
+public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
+    where TValue : IValidate<TValue>
+{
+    public OneOf<TValue, ValidationErrors> Basic { get; }
 
-public sealed class Valid<TValue>
+    private IsValid(ValidationErrors input) : base(input)
+    {
+        Basic = input;
+    }
+    
+    private IsValid(Valid<TValue> input) : base(input)
+    {
+        Basic = input.ValidValue;
+    }
+
+    public static IsValid<TValue> Create(TValue value)
+    {
+        var context = new Validator<TValue>(value);
+        return TValue.Validate(context).Match<IsValid<TValue>>(
+            success => new IsValid<TValue>(new Valid<TValue>(value)),
+            error => new IsValid<TValue>(error));
+    }
+}
+
+public class Valid<TValue>
     where TValue : IValidate<TValue>
 {
     public TValue ValidValue { get; }
 
-    internal Valid(TValue validValue)
+    internal Valid(TValue value)
     {
-        ValidValue = validValue;
-    }
-
-    public Valid<TParam> GetParameter<TParam>(Func<TValue, TParam> getParameter)
-        where TParam : IValidate<TParam>
-    {
-        return new Valid<TParam>(getParameter(ValidValue));
-    }
-
-    public static explicit operator TValue(Valid<TValue> valid)
-    {
-        return valid.ValidValue;
-    }
-
-    public static explicit operator Valid(Valid<TValue> valid)
-    {
-        return new Valid();
-    }
-}
-
-public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
-    where TValue : IValidate<TValue>
-{
-    private IsValid(Valid<TValue> value)
-        : base(value)
-    {
-    }
-
-    private IsValid(ValidationErrors validationErrors)
-        : base(validationErrors)
-    {
-    }
-
-    public static IsValid<TValue> Create(TValue validatable)
-    {
-        var validationResult = validatable.Validate();
-
-        return validationResult.Match<IsValid<TValue>>(
-            success => new IsValid<TValue>(new Valid<TValue>(validatable)),
-            errors => new IsValid<TValue>(errors));
+        ValidValue = value;
     }
 }

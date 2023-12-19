@@ -1,26 +1,25 @@
-﻿using MoreLinq.Extensions;
-
-namespace Explicit.Validation.FluentValidation;
+﻿namespace Explicit.Validation.FluentValidation;
 
 public sealed class FluentValidator<TValue> : AbstractValidator<TValue>
     where TValue : notnull
 {
-}
-
-public static class FluentValidator
-{
-    public static void ValidateCollection<TFrom, TMethod, TValue>(
-        IReadOnlyCollection<TValue> collection,
-        ValidationContext<TFrom> context)
-        where TMethod : IValidate<TValue> where TValue : notnull
+    private FluentValidator()
     {
-        collection.ForEach((property, propertyIndex) =>
+    }
+    
+    public static OneOf<Success, ValidationErrors> Validate(TValue value, Action<FluentValidator<TValue>> setup)
+    {
+        var validator = new FluentValidator<TValue>();
+        setup(validator);
+        var result = validator.Validate(value);
+        
+        if (result.IsValid)
         {
-            var errors = Validator<TValue>.Validate<TMethod>(property).Match<IReadOnlyCollection<string>>(
-                success => Array.Empty<string>(),
-                errors => errors.ErrorMessages);
+            return new Success();
+        }
 
-            errors.ForEach(error => context.AddFailure(new ValidationFailure($"[{propertyIndex}]", error)));
-        });
+        var errors = new ValidationErrors(result.Errors.Select(x => x.ErrorMessage).ToArray());
+
+        return errors;
     }
 }

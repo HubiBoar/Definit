@@ -1,4 +1,6 @@
-﻿namespace Explicit.Validation.NewFluent.Configuration;
+﻿using Explicit.Validation;
+
+namespace Explicit.Configuration;
 
 public interface IConfigSection<TSelf> : ISectionName, IValidate<TSelf>
     where TSelf : IConfigSection<TSelf>

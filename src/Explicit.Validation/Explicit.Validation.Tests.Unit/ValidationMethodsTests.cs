@@ -11,7 +11,7 @@ public class ValidationMethodsTests
         var validatable = new ValidatableSuccessClass();
 
         //Act
-        var result = validatable.Validate();
+        var result = ValidatableSuccessClass.Validate(new Validator<ValidatableSuccessClass>(validatable));
 
         //Assert
         result.IsT0.Should().BeTrue();
@@ -25,7 +25,7 @@ public class ValidationMethodsTests
         var validatable = new ValidatableErrorClass();
 
         //Act
-        var result = validatable.Validate();
+        var result = ValidatableErrorClass.Validate(new Validator<ValidatableErrorClass>(validatable));
 
         //Assert
         result.IsT0.Should().BeFalse();

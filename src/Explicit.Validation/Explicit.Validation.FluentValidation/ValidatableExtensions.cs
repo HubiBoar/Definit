@@ -1,6 +1,9 @@
-﻿namespace Explicit.Validation.FluentValidation;
+﻿using Explicit.Primitives;
+using MoreLinq.Extensions;
 
-public static class ValidatableExtensions
+namespace Explicit.Validation.FluentValidation;
+
+public static class ValidateExtensions
 {
     public static IRuleBuilderOptionsConditions<T, TValue> ValidateSelf<T, TValue>(
         this IRuleBuilder<T, TValue> builder)
@@ -23,26 +26,36 @@ public static class ValidatableExtensions
     {
         return builder.Custom((validatable, context) =>
         {
-            var errors = Validator<TValue>.Validate<TMethod>(validatable).Match<IReadOnlyCollection<string>>(
+            var errors = validatable.IsValid<TValue, TMethod>().Match<IReadOnlyCollection<string>>(
                 _ => Array.Empty<string>(),
                 errors => errors.ErrorMessages);
             
-            foreach (var error in errors)
-            {
-                context.AddFailure(error);
-            }
+            errors.ForEach(context.AddFailure);
         });
     }
 
-    internal static OneOf<Success, ValidationErrors> ToResult(this ValidationResult result)
+    public static void Use<TMethod, TValue>(
+        this global::FluentValidation.ValidationContext<TValue> context,
+        IReadOnlyCollection<TValue> collection)
+        where TMethod : IValidate<TValue>
+        where TValue : notnull
     {
-        if (result.IsValid)
+        context.Use<TValue, TMethod, TValue>(collection);
+    }
+
+    public static void Use<TFrom, TMethod, TValue>(
+        this global::FluentValidation.ValidationContext<TFrom> context,
+        IReadOnlyCollection<TValue> collection)
+        where TMethod : IValidate<TValue>
+        where TValue : notnull
+    {
+        collection.ForEach((property, propertyIndex) =>
         {
-            return new Success();
-        }
+            var errors = property.IsValid<TValue, TMethod>().Match<IReadOnlyCollection<string>>(
+                success => Array.Empty<string>(),
+                errors => errors.ErrorMessages);
 
-        var errors = new ValidationErrors(result.Errors.Select(x => x.ErrorMessage).ToArray());
-
-        return errors;
+            errors.ForEach(error => context.AddFailure(new ValidationFailure($"[{propertyIndex}]", error)));
+        });
     }
 }

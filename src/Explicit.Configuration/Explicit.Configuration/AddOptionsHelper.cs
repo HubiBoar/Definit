@@ -1,33 +1,30 @@
 ﻿using Explicit.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OneOf.Else;
 
 namespace Explicit.Configuration;
 
 public static class AddOptionsHelper
 {
-    public static void AddOptions<TOptions>(
+    public static void AddConfig<TConfig>(
         IServiceCollection services,
         IConfigurationManager configuration)
-            where TOptions : class, IOptionsObject, IOptionsConfiguration<TOptions>
+            where TConfig : IConfig
     {
-        var builder = services.AddOptions<TOptions>();
-        var section = configuration.GetRequiredSection(TOptions.SectionName);
-        TOptions.Configure(builder, section);
-
-        services.AddSingleton<IOptionsHolder<TOptions>, OptionsHolder<TOptions>>();
+        TConfig.Register(services, configuration);
     }
     
-    public static OneOf<TOptions, ValidationErrors, Exception> GetOptions<TOptions>(IServiceCollection services)
-        where TOptions : class, IOptionsObject
+    public static OneOf<TSection, ValidationErrors, Exception> GetConfigSection<TSection>(IServiceCollection services)
+        where TSection : class, IConfigSection<TSection>
     {
         try
         {
             using var provider = services.BuildServiceProvider();
-            var holder = provider.GetRequiredService<IOptionsHolder<TOptions>>();
+            var holder = provider.GetRequiredService<IConfigHolder<TSection>>();
 
-            return holder.GetValue().Basic.As<TOptions, ValidationErrors, Exception>();
+            return holder.Get().Basic.As<TSection, ValidationErrors, Exception>();
         }
         catch (Exception exception)
         {

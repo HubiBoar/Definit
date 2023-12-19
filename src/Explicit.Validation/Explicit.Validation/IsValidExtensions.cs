@@ -13,10 +13,4 @@ public static class IsValidExtensions
     {
         return values.Select(IsValid).ToArray();
     }
-    
-    public static OneOf<Success, ValidationErrors> Validate<TValue>(this TValue value)
-        where TValue : IValidate<TValue>
-    {
-        return Validator<TValue>.Validate<TValue>(value);
-    }
 }

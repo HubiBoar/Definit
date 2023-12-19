@@ -1,16 +1,16 @@
 ﻿namespace Explicit.Validation.Tests.Unit;
 
-internal sealed class ValidatableSuccessClass : IValidatable
+internal sealed class ValidatableSuccessClass : IValidate<ValidatableSuccessClass>
 {
-    public OneOf<Success, ValidationErrors> Validate()
+    public static OneOf<Success, ValidationErrors> Validate(Validator<ValidatableSuccessClass> context)
     {
         return new Success();
     }
 }
 
-internal sealed class ValidatableErrorClass : IValidatable
+internal sealed class ValidatableErrorClass : IValidate<ValidatableErrorClass>
 {
-    public OneOf<Success, ValidationErrors> Validate()
+    public static OneOf<Success, ValidationErrors> Validate(Validator<ValidatableErrorClass> context)
     {
         return new ValidationErrors();
     }
@@ -18,7 +18,7 @@ internal sealed class ValidatableErrorClass : IValidatable
 
 internal sealed class ValidatableSuccessMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(string value)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
     {
         return new Success();
     }
@@ -26,7 +26,7 @@ internal sealed class ValidatableSuccessMethod : IValidate<string>
 
 internal sealed class ValidatableErrorMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(string value)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
     {
         return new ValidationErrors();
     }

@@ -2,19 +2,6 @@
 
 public static class ValidationRules
 {
-    public static void UseValidationMethod<TFrom, TMethod>(this IRuleBuilder<TFrom, string> rule)
-        where TMethod : IValidate<string>
-    {
-        rule.ValidateSelf<TFrom, string, TMethod>();
-    }
-
-    public static void UseValidationMethod<TFrom, TValue, TMethod>(this IRuleBuilder<TFrom, TValue> rule)
-        where TMethod : IValidate<TValue>
-        where TValue : notnull
-    {
-        rule.ValidateSelf<TFrom, TValue, TMethod>();
-    }
-    
     public static void IsConnectionString<TFrom>(this IRuleBuilder<TFrom, string> rule)
     {
         rule.NotEmpty().MinimumLength(4);
