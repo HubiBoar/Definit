@@ -26,11 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Primitives.Tests.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Configuration.Tests.Unit", "Explicit.Configuration\Explicit.Configuration.Tests.Unit\Explicit.Configuration.Tests.Unit.csproj", "{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Validation.New", "Explicit.Validation\Explicit.Validation.New\Explicit.Validation.New.csproj", "{83CFC382-98B4-4EEE-B626-B477A4BB349A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Validation.NewFluent", "Explicit.Validation\Explicit.Validation.NewFluent\Explicit.Validation.NewFluent.csproj", "{B877C70C-95C3-4C82-BDEA-0A562A72685D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Validation.New.IValidateMethod", "Explicit.Validation\Explicit.Validation.New.IValidateMethod\Explicit.Validation.New.IValidateMethod.csproj", "{632EE899-332C-4C69-9AF5-60BFCD690638}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,18 +70,10 @@ Global
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83CFC382-98B4-4EEE-B626-B477A4BB349A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83CFC382-98B4-4EEE-B626-B477A4BB349A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83CFC382-98B4-4EEE-B626-B477A4BB349A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83CFC382-98B4-4EEE-B626-B477A4BB349A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B877C70C-95C3-4C82-BDEA-0A562A72685D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B877C70C-95C3-4C82-BDEA-0A562A72685D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B877C70C-95C3-4C82-BDEA-0A562A72685D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B877C70C-95C3-4C82-BDEA-0A562A72685D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{632EE899-332C-4C69-9AF5-60BFCD690638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{632EE899-332C-4C69-9AF5-60BFCD690638}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{632EE899-332C-4C69-9AF5-60BFCD690638}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{632EE899-332C-4C69-9AF5-60BFCD690638}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7E943ACF-5C6A-414E-B5D6-642B431C84E6} = {47336CDD-7014-4A30-A11E-B938881263AC}
@@ -97,8 +85,6 @@ Global
 		{71539319-377A-4499-BD9F-5025A8606725} = {3FB3DDE3-9D3D-41C0-9AF3-0F00E5509C40}
 		{4AF6BA5E-8B51-439F-BE51-74A2624FEAEA} = {3FB3DDE3-9D3D-41C0-9AF3-0F00E5509C40}
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124} = {661D4CDB-DBE0-4A0B-9589-D7B26ED7AEB5}
-		{83CFC382-98B4-4EEE-B626-B477A4BB349A} = {47336CDD-7014-4A30-A11E-B938881263AC}
 		{B877C70C-95C3-4C82-BDEA-0A562A72685D} = {47336CDD-7014-4A30-A11E-B938881263AC}
-		{632EE899-332C-4C69-9AF5-60BFCD690638} = {47336CDD-7014-4A30-A11E-B938881263AC}
 	EndGlobalSection
 EndGlobal

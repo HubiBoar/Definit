@@ -1,15 +1,33 @@
-﻿using OneOf;
+﻿using Explicit.Validation.NewFluent.Fluent;
 
 namespace Explicit.Validation.NewFluent;
 
-public sealed class IsValid<TValue>
+public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
     where TValue : IValidate<TValue>
 {
-    public OneOf<Valid<TValue>, ValidationErrors> Result { get; }
-
-    internal IsValid(OneOf<Valid<TValue>, ValidationErrors> result)
+    private IsValid(Valid<TValue> value)
+        : base(value)
     {
-        Result = result;
+    }
+
+    private IsValid(ValidationErrors validationErrors)
+        : base(validationErrors)
+    {
+    }
+
+    internal static IsValid<TValue> Create(TValue value)
+    {
+        var validator = new FluentValidator<TValue>();
+        var result = validator.Validate(value);
+        
+        if (result.IsValid)
+        {
+            return new IsValid<TValue>(new Valid<TValue>(value));
+        }
+
+        var errors = new ValidationErrors(result.Errors.Select(x => x.ErrorMessage).ToArray());
+
+        return new IsValid<TValue>(errors);
     }
 }
 

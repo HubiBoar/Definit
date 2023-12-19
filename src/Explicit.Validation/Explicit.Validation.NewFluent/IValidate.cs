@@ -8,7 +8,8 @@ public interface IValidate<TValue>
     public static abstract void SetupValidation(FluentValidator<TValue> validator);
 }
 
-public interface IValidationRule<TValue>
+public interface IValidationRule<in TValue>
+    where TValue : notnull
 {
     public static abstract void SetupRule<TFrom>(IRuleBuilder<TFrom, TValue> ruleBuilder);
 }

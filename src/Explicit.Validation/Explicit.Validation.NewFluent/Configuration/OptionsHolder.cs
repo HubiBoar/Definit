@@ -1,24 +1,22 @@
-﻿using Explicit.Validation.NewFluent.Fluent;
+﻿using Explicit.Validation.NewFluent.Primitives;
 using Microsoft.Extensions.Configuration;
 
 namespace Explicit.Validation.NewFluent.Configuration;
 
-public interface ISectionValue<TValue, TMethod> : ISectionName, IValidationRule<TValue>
+public interface IOptionsHolder<TSection>
+    where TSection : class, ISectionName, IValidate<TSection>
+{
+    IsValid<TSection> Get();
+}
+
+public interface IOptionsHolder<TValue, TSection>
     where TValue : notnull
-    where TMethod : IValidationRule<TValue>
+    where TSection : ISectionName, IValidationRule<TValue>
 {
-    static void IValidationRule<TValue>.SetupRule<TFrom>(IRuleBuilder<TFrom, TValue> ruleBuilder)
-    {
-        TMethod.SetupRule(ruleBuilder);
-    }
+    IsValid<Value<TValue, TSection>> Get();
 }
 
-public interface ISectionName
-{
-    public static abstract string SectionName { get; }
-}
-
-public sealed class OptionsHolder<TSection>
+internal sealed class OptionsHolder<TSection> : IOptionsHolder<TSection>
     where TSection : class, ISectionName, IValidate<TSection>
 {
     private IConfiguration Configuration { get; }
@@ -32,11 +30,11 @@ public sealed class OptionsHolder<TSection>
     {
         var sectionValue = Configuration.GetValue<TSection>(TSection.SectionName)!;
 
-        return FluentValidator<TSection>.IsValid(sectionValue);
+        return IsValid<TSection>.Create(sectionValue);
     }
 }
 
-public sealed class OptionsHolder<TValue, TSection>
+internal sealed class OptionsHolder<TValue, TSection> : IOptionsHolder<TValue, TSection>
     where TValue : notnull
     where TSection : ISectionName, IValidationRule<TValue>
 {
@@ -53,6 +51,6 @@ public sealed class OptionsHolder<TValue, TSection>
 
         var value = new Value<TValue, TSection>(sectionValue);
         
-        return FluentValidator<Value<TValue, TSection>>.IsValid(value);
+        return IsValid<Value<TValue, TSection>>.Create(value);
     }
 }
