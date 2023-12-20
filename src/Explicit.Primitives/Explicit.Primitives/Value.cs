@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Explicit.Primitives;
 
 [SystemJsonStaticConverter]
-public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>
+public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>, IJsonStaticConvertable<Value<TValue, TMethod>>
     where TValue : notnull
     where TMethod : IValidate<TValue>
 {

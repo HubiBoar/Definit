@@ -8,15 +8,9 @@ namespace Explicit.Primitives.Tests.Unit;
 
 internal class ExampleClass : IValidate<ExampleClass>
 {
-    public Value<string, IsConnectionString> ConnectionString { get; }
+    public required Value<string, IsConnectionString> ConnectionString { get; init; }
     
-    public Value<string, IsEmail> Email { get; }
-
-    public ExampleClass(string connectionString, string email)
-    {
-        ConnectionString = connectionString;
-        Email = email;
-    }
+    public required Value<string, IsEmail> Email { get; init; }
 
     public static OneOf<Success, ValidationErrors> Validate(Validator<ExampleClass> context)
     {

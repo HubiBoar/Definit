@@ -59,4 +59,35 @@ public class SystemJsonTests
         //Assert
         value.InternalString.Should().Be("test");
     }
+    
+    [Fact]
+    public void ExampleClass_Write()
+    {
+        //Arrange
+        var value = new ExampleClass()
+        {
+            ConnectionString = "connectionString",
+            Email = "email"
+        };
+
+        //Act
+        var json = JsonSerializer.Serialize(value);
+        
+        //Assert
+        json.Should().Be("{\"ConnectionString\":\"connectionString\",\"Email\":\"email\"}");
+    }
+    
+    [Fact]
+    public void ExampleClass_Read()
+    {
+        //Arrange
+        var json = "{\"ConnectionString\":\"connectionString\",\"Email\":\"email\"}";
+
+        //Act
+        var value = JsonSerializer.Deserialize<ExampleClass>(json)!;
+        
+        //Assert
+        ((string)value.ConnectionString).Should().Be("connectionString");
+        ((string)value.Email).Should().Be("email");
+    }
 }
