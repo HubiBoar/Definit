@@ -1,4 +1,4 @@
-﻿namespace Explicit.Validation.Tests.Unit;
+﻿namespace Explicit.Validation.Tests.Unit.Validation;
 
 internal sealed class ValidatableSuccessClass : IValidate<ValidatableSuccessClass>
 {

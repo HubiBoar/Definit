@@ -41,8 +41,8 @@ public class ExampleDependency
 
     private void Values()
     {
-        var value = Value.GetValue<string, ExampleConfigValue>();
-        var section = Section.GetSection();
+        var value = Value.Get<string, ExampleConfigValue>();
+        var section = Section.Get();
     }
 
 }

@@ -4,7 +4,7 @@ public sealed record ValidationErrors
 {
     public IReadOnlyCollection<string> ErrorMessages { get; }
 
-    public string Message => $"ValidationErrors: {string.Join(",", ErrorMessages)}";
+    public string Message => $"ValidationErrors: {string.Join(", ", ErrorMessages)}";
 
     public ValidationErrors(IReadOnlyCollection<string> errorMessages)
     {

@@ -2,6 +2,11 @@
 
 namespace Explicit.Validation.FluentValidation;
 
+public interface IValidationRule<in TValue>
+{
+    public static abstract void SetupRule<TFrom>(IRuleBuilder<TFrom, TValue> builder);
+}
+
 public sealed class IsConnectionString : IValidate<string>
 {
     public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)

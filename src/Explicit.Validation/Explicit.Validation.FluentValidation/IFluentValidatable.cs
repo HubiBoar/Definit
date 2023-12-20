@@ -15,6 +15,8 @@ public static class FluentValidateExtensions
         {
             var rule = validator.RuleFor(from => context.Value);
 
+            rule.Must(x => true).WithName("Value");
+
             ruleBuilder(rule);
         });
     }

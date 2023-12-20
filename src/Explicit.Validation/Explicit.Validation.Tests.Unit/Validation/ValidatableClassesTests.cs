@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 
-namespace Explicit.Validation.Tests.Unit;
+namespace Explicit.Validation.Tests.Unit.Validation;
 
 public class ValidatableClassesTests
 {
