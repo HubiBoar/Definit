@@ -5,8 +5,9 @@ using Newtonsoft.Json;
 namespace Explicit.Primitives;
 
 [SystemJsonStaticConverter]
-public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertable<Value<TValue, TMethod>>
-    where TMethod : IValidationMethod<TValue>
+public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>
+    where TValue : notnull
+    where TMethod : IValidate<TValue>
 {
     private readonly TValue _value;
 
@@ -15,14 +16,17 @@ public sealed class Value<TValue, TMethod> : IValidatable, IJsonStaticConvertabl
         _value = value;
     }
 
-    public TValue GetValue() => _value;
+    public TValue GetValue()
+    {
+        return _value;
+    }
+
+    public static OneOf<Success, ValidationErrors> Validate(Validator<Value<TValue, TMethod>> context)
+    {
+        return TMethod.Validate(new Validator<TValue>(context.Value._value));
+    }
 
     public override string? ToString() => JsonConvert.SerializeObject(_value);
-
-    public OneOf<Success, ValidationErrors> Validate()
-    {
-        return TMethod.Validate(_value);
-    }
 
     public static implicit operator Value<TValue, TMethod>(TValue value)
     {

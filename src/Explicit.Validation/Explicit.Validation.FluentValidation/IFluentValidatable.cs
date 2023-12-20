@@ -1,21 +1,21 @@
 ﻿namespace Explicit.Validation.FluentValidation;
 
-public interface IFluentValidatable<TSelf> : IFluentValidatableSetup<TSelf>, IValidatable, IValidationMethod<TSelf>
-    where TSelf : IFluentValidatable<TSelf>
+public static class FluentValidateExtensions
 {
-    OneOf<Success, ValidationErrors> IValidatable.Validate()
+    public static OneOf<Success, ValidationErrors> Fluent<TValue>(this Validator<TValue> context, Action<FluentValidator<TValue>> validator)
+        where TValue : notnull
     {
-        return FluentValidator.Validate((TSelf)this, TSelf.SetupValidation);
+        return FluentValidator<TValue>.Validate(context.Value, validator);
     }
-
-    static OneOf<Success, ValidationErrors> IValidationMethod<TSelf>.Validate(TSelf value)
+    
+    public static OneOf<Success, ValidationErrors> FluentRule<TValue>(this Validator<TValue> context, Action<IRuleBuilder<TValue, TValue>> ruleBuilder)
+        where TValue : notnull
     {
-        return FluentValidator.Validate(value, TSelf.SetupValidation);
-    }
-}
+        return FluentValidator<TValue>.Validate(context.Value, validator =>
+        {
+            var rule = validator.RuleFor(from => context.Value);
 
-public interface IFluentValidatableSetup<TFrom>
-    where TFrom : notnull
-{
-    public static abstract void SetupValidation(FluentValidator<TFrom> validator);
+            ruleBuilder(rule);
+        });
+    }
 }

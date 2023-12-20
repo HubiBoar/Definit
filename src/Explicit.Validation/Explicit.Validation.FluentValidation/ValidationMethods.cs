@@ -1,38 +1,37 @@
 ﻿using System.Text.Json;
-using Explicit.Validation;
 
 namespace Explicit.Validation.FluentValidation;
 
-public sealed class IsConnectionString : IFluentValidationRuleMethod<IsConnectionString, string>
+public sealed class IsConnectionString : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
     {
-        ruleBuilder.NotEmpty().MinimumLength(4);
+        return context.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
 }
 
-public sealed class IsEmail : IFluentValidationRuleMethod<IsEmail, string>
+public sealed class IsEmail : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
     {
-        ruleBuilder.EmailAddress();
+        return ruleBuilder.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
 }
 
-public sealed class IsUrl : IFluentValidationRuleMethod<IsUrl, string>
+public sealed class IsUrl : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
     {
-        ruleBuilder.IsUrl();
+        return ruleBuilder.FluentRule(r => r.IsUrl());
     }
 }
 
-public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonArrayOf<TMethod>, string>
-    where TMethod : IValidationMethod<string>
+public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
+    where TMethod : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
     {
-        ruleBuilder.Custom((array, context) =>
+        return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
             //Convert property to json
             var properties = JsonSerializer.Deserialize<IReadOnlyCollection<string>>(array);
@@ -43,17 +42,17 @@ public sealed class IsJsonArrayOf<TMethod> : IFluentValidationRuleMethod<IsJsonA
                 return;
             }
 
-            FluentValidator.ValidateCollection<TFrom, TMethod, string>(properties, context);
-        });
+            context.Use<TMethod, string>(properties);
+        }));
     }
 }
 
-public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsCommaArrayOf<TMethod>, string>
-    where TMethod : IValidationMethod<string>
+public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
+    where TMethod : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
     {
-        ruleBuilder.Custom((array, context) =>
+        return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
             var properties = array.Split(",");
 
@@ -62,24 +61,24 @@ public sealed class IsCommaArrayOf<TMethod> : IFluentValidationRuleMethod<IsComm
                 return;
             }
 
-            FluentValidator.ValidateCollection<TFrom, TMethod, string>(properties, context);
-        });
+            context.Use<TMethod, string>(properties);
+        }));
     }
 }
 
-public sealed class IsNotEmpty : IFluentValidationRuleMethod<IsNotEmpty, string>
+public sealed class IsNotEmpty : IValidate<string>
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, string> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
     {
-        ruleBuilder.NotEmpty().NotNull();
+        return ruleBuilder.FluentRule(r => r.NotEmpty().NotNull());
     }
 }
 
-public sealed class IsNotNull<TValue> : IFluentValidationRuleMethod<IsNotNull<TValue>, TValue>
+public sealed class IsNotNull<TValue> : IValidate<TValue>
     where TValue : notnull
 {
-    public static void SetupValidation<TFrom>(RuleBuilder<TFrom, TValue> ruleBuilder)
+    public static OneOf<Success, ValidationErrors> Validate(Validator<TValue> ruleBuilder)
     {
-        ruleBuilder.NotNull();
+        return ruleBuilder.FluentRule(r => r.NotNull());
     }
 }

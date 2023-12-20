@@ -13,16 +13,17 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="OneOf"/>
-        <PackageReference Include="OneOf.Else"/>
-        <PackageReference Include="Microsoft.Extensions.Options"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>
+        <PackageReference Include="OneOf" />
+        <PackageReference Include="OneOf.Else" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Explicit.Utils\Explicit.Utils\Explicit.Utils.csproj" />
+      <ProjectReference Include="..\..\Explicit.Validation\Explicit.Validation.FluentValidation\Explicit.Validation.FluentValidation.csproj" />
       <ProjectReference Include="..\..\Explicit.Validation\Explicit.Validation\Explicit.Validation.csproj" />
     </ItemGroup>
 

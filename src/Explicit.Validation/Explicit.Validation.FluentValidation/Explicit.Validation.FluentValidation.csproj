@@ -13,6 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Explicit.Primitives\Explicit.Primitives\Explicit.Primitives.csproj" />
       <ProjectReference Include="..\Explicit.Validation\Explicit.Validation.csproj" />
     </ItemGroup>
 
