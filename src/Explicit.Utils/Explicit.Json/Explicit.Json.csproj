@@ -11,5 +11,5 @@
         <PackageReference Include="OneOf" />
         <PackageReference Include="OneOf.Else" />
     </ItemGroup>
-    
+
 </Project>

@@ -1,4 +1,4 @@
-﻿using Explicit.Utils.Json;
+﻿using Explicit.Json;
 using Explicit.Validation;
 using Newtonsoft.Json;
 

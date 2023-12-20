@@ -1,4 +1,4 @@
-﻿namespace Explicit.Utils.Json;
+﻿namespace Explicit.Json;
 
 internal class JsonStaticConvertableHelper
 {

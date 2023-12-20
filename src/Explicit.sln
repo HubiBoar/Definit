@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Primitives.Tests.U
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Configuration.Tests.Unit", "Explicit.Configuration\Explicit.Configuration.Tests.Unit\Explicit.Configuration.Tests.Unit.csproj", "{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explicit.Json", "Explicit.Utils\Explicit.Json\Explicit.Json.csproj", "{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7E943ACF-5C6A-414E-B5D6-642B431C84E6} = {47336CDD-7014-4A30-A11E-B938881263AC}
@@ -72,5 +78,6 @@ Global
 		{71539319-377A-4499-BD9F-5025A8606725} = {3FB3DDE3-9D3D-41C0-9AF3-0F00E5509C40}
 		{4AF6BA5E-8B51-439F-BE51-74A2624FEAEA} = {3FB3DDE3-9D3D-41C0-9AF3-0F00E5509C40}
 		{0FF1DC48-D3AB-48BF-87F1-08329FEA1124} = {661D4CDB-DBE0-4A0B-9589-D7B26ED7AEB5}
+		{EB2FC11A-C8C0-4096-9ABB-6397CDE29FDC} = {CAE278B5-F322-4038-B1A6-2700C9E07EDE}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Explicit.Utils.Json;
+namespace Explicit.Json;
 
 internal class NewtonsoftStaticConverter : JsonConverter
 {
