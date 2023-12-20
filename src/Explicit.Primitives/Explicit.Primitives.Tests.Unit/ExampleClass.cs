@@ -22,11 +22,9 @@ internal class ExampleClass : IValidate<ExampleClass>
     {
         return context.Fluent(validator =>
         {
-            validator.RuleFor(x => x.ConnectionString)
-                .NotEmpty();
+            validator.RuleFor(x => x.ConnectionString).ValidateSelf();
 
-            validator.RuleFor(x => x.Email)
-                .NotEmpty();
+            validator.RuleFor(x => x.Email).ValidateSelf();
         });
     }
 }

@@ -35,7 +35,7 @@ public static class ValidateExtensions
     }
 
     public static void Use<TMethod, TValue>(
-        this global::FluentValidation.ValidationContext<TValue> context,
+        this ValidationContext<TValue> context,
         IReadOnlyCollection<TValue> collection)
         where TMethod : IValidate<TValue>
         where TValue : notnull
@@ -44,7 +44,7 @@ public static class ValidateExtensions
     }
 
     public static void Use<TFrom, TMethod, TValue>(
-        this global::FluentValidation.ValidationContext<TFrom> context,
+        this ValidationContext<TFrom> context,
         IReadOnlyCollection<TValue> collection)
         where TMethod : IValidate<TValue>
         where TValue : notnull
