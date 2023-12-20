@@ -10,4 +10,8 @@
         <PackageReference Include="OneOf" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Explicit.Utils\Explicit.Utils\Explicit.Utils.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -21,6 +21,11 @@ public sealed record ValidationErrors
         ErrorMessages = errorMessages;
     }
 
+    public static ValidationErrors Null(string propertyName)
+    {
+        return new ValidationErrors($"Property: {propertyName} is null");
+    }
+
     public ExplicitValidationException ToException()
     {
         return new ExplicitValidationException(this);

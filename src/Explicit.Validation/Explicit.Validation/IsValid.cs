@@ -1,4 +1,6 @@
-﻿namespace Explicit.Validation;
+﻿using Explicit.Utils;
+
+namespace Explicit.Validation;
 
 public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
     where TValue : IValidate<TValue>
@@ -15,8 +17,13 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
         Basic = input.ValidValue;
     }
 
-    public static IsValid<TValue> Create(TValue value)
+    public static IsValid<TValue> Create(TValue? value)
     {
+        if (value is null)
+        {
+            return new IsValid<TValue>(ValidationErrors.Null(ExplicitType.GetTypeVerboseName<TValue>()));
+        }
+        
         var context = new Validator<TValue>(value);
         return TValue.Validate(context).Match<IsValid<TValue>>(
             success => new IsValid<TValue>(new Valid<TValue>(value)),
