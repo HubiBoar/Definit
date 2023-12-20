@@ -34,16 +34,16 @@ public static class ValidateExtensions
         });
     }
 
-    public static void Use<TMethod, TValue>(
+    public static void ValidateCollection<TMethod, TValue>(
         this ValidationContext<TValue> context,
         IReadOnlyCollection<TValue> collection)
         where TMethod : IValidate<TValue>
         where TValue : notnull
     {
-        context.Use<TValue, TMethod, TValue>(collection);
+        context.ValidateCollection<TValue, TMethod, TValue>(collection);
     }
 
-    public static void Use<TFrom, TMethod, TValue>(
+    public static void ValidateCollection<TFrom, TMethod, TValue>(
         this ValidationContext<TFrom> context,
         IReadOnlyCollection<TValue> collection)
         where TMethod : IValidate<TValue>
@@ -55,7 +55,7 @@ public static class ValidateExtensions
                 success => Array.Empty<string>(),
                 errors => errors.ErrorMessages);
 
-            errors.ForEach(error => context.AddFailure(new ValidationFailure($"[{propertyIndex}]", error)));
+            errors.ForEach(error => context.AddFailure($"[{context.DisplayName}[{propertyIndex}]] {error}"));
         });
     }
 }

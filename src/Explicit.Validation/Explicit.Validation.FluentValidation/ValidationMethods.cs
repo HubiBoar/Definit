@@ -47,7 +47,7 @@ public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
                 return;
             }
 
-            context.Use<TMethod, string>(properties);
+            context.ValidateCollection<TMethod, string>(properties);
         }));
     }
 }
@@ -66,7 +66,7 @@ public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
                 return;
             }
 
-            context.Use<TMethod, string>(properties);
+            context.ValidateCollection<TMethod, string>(properties);
         }));
     }
 }

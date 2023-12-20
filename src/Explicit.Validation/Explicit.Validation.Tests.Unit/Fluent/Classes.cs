@@ -26,6 +26,8 @@ internal class ExampleClass : IValidate<ExampleClass>
     
     public required Value<string, IsValue1> Value1 { get; init; }
 
+    public required Value<string, IsCommaArrayOf<IsValue0>> CommaArray { get; init; }
+
     public static OneOf<Success, ValidationErrors> Validate(Validator<ExampleClass> context)
     {
         return context.Fluent(validator =>
@@ -33,6 +35,8 @@ internal class ExampleClass : IValidate<ExampleClass>
             validator.RuleFor(x => x.Value0).ValidateSelf();
 
             validator.RuleFor(x => x.Value1).ValidateSelf();
+
+            validator.RuleFor(x => x.CommaArray).ValidateSelf();
         });
     }
 }
