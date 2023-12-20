@@ -7,11 +7,11 @@ using OneOf.Types;
 
 namespace Explicit.Configuration.Tests.Unit;
 
-public class TestSection : IOptionsSection<TestSection>
+public class TestSection : IConfigSection<TestSection>
 {
     public static string SectionName { get; } = "test";
 
-    public OneOf<Success, ValidationErrors> Validate()
+    public static OneOf<Success, ValidationErrors> Validate(Validator<TestSection> context)
     {
         return new Success();
     }
@@ -24,6 +24,6 @@ public class ConfigurationTests
     {
         var services = new ServiceCollection();
         var configuration = Substitute.For<IConfigurationManager>();
-        AddOptionsHelper.AddOptions<TestSection>(services, configuration);
+        AddConfigHelper.AddConfig<TestSection>(services, configuration);
     }
 }

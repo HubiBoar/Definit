@@ -29,14 +29,20 @@ public class ExampleConfigValue : IConfigValue<string, IsCommaArrayOf<IsConnecti
 
 public class ExampleDependency
 {
-    public IConfigHolder<string, ExampleConfigValue> Value { get; }
+    public IConfigHolder<ExampleConfigValue> Value { get; }
 
     public IConfigHolder<ExampleConfigSection> Section { get; }
     
-    public ExampleDependency(IConfigHolder<string, ExampleConfigValue> value, IConfigHolder<ExampleConfigSection> section)
+    public ExampleDependency(IConfigHolder<ExampleConfigValue> value, IConfigHolder<ExampleConfigSection> section)
     {
         Value = value;
         Section = section;
+    }
+
+    private void Values()
+    {
+        var value = Value.GetValue<string, ExampleConfigValue>();
+        var section = Section.GetSection();
     }
 
 }

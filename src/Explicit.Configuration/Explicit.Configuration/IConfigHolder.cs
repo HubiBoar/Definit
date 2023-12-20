@@ -1,57 +1,20 @@
-﻿using Explicit.Primitives;
-using Explicit.Validation;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Explicit.Configuration;
 
-public interface IConfigHolder<TSection>
-    where TSection : ISectionName, IValidate<TSection>
+public interface IConfigHolder<out TSection>
+    where TSection : ISectionName
 {
-    IsValid<TSection> Get();
-}
-
-public interface IConfigHolder<TValue, TSection>
-    where TValue : notnull
-    where TSection : IConfigValue<TValue>, IValidate<TValue>
-{
-    IsValid<Value<TValue, TSection>> Get();
+    internal IConfiguration Configuration { get; }
 }
 
 internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
-    where TSection : ISectionName, IValidate<TSection>
+    where TSection : ISectionName
 {
-    private IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
     public ConfigHolder(IConfiguration configuration)
     {
         Configuration = configuration;
-    }
-
-    public IsValid<TSection> Get()
-    {
-        var sectionValue = Configuration.GetValue<TSection>(TSection.SectionName)!;
-
-        return IsValid<TSection>.Create(sectionValue);
-    }
-}
-
-internal sealed class ConfigHolder<TValue, TSection> : IConfigHolder<TValue, TSection>
-    where TValue : notnull
-    where TSection : IConfigValue<TValue>, IValidate<TValue>
-{
-    private IConfiguration Configuration { get; }
-
-    public ConfigHolder(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    public IsValid<Value<TValue, TSection>> Get()
-    {
-        var sectionValue = Configuration.GetValue<TValue>(TSection.SectionName)!;
-
-        var value = new Value<TValue, TSection>(sectionValue);
-        
-        return IsValid<Value<TValue, TSection>>.Create(value);
     }
 }
