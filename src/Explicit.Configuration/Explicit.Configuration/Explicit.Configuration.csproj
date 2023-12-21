@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Title>Explicit Configuration</Title>
+        <Title>Explicit.Configuration</Title>
         <Description>Explicit Configuration</Description>
-        <PackageTags>configuration, library</PackageTags>
+        <PackageTags>configuration</PackageTags>
     </PropertyGroup>
     
     <ItemGroup>

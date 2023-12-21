@@ -6,6 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Title>Explicit.FluentValidation</Title>
+        <Description>Explicit FluentValidation</Description>
+        <PackageTags>validation, fluentvalidation</PackageTags>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="FluentValidation" />
         <PackageReference Include="morelinq" />

@@ -6,6 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Title>Explicit.Validation</Title>
+        <Description>Explicit Validation</Description>
+        <PackageTags>validation</PackageTags>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="OneOf" />
     </ItemGroup>

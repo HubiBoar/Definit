@@ -6,6 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Title>Explicit.Json</Title>
+        <Description>Explicit Json</Description>
+        <PackageTags>json</PackageTags>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" />
         <PackageReference Include="OneOf" />

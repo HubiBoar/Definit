@@ -6,6 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <Title>Explicit.CLI</Title>
+        <Description>Explicit CLI</Description>
+        <PackageTags>cli</PackageTags>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\..\Explicit.Configuration\Explicit.Configuration\Explicit.Configuration.csproj" />
     </ItemGroup>
