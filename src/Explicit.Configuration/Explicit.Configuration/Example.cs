@@ -7,9 +7,9 @@ public class ExampleConfigSection : IConfigSection<ExampleConfigSection>
 {
     public static string SectionName { get; } = "ExampleConfigSection";
 
-    public string Value1 { get; }
+    public string Value1 { get; } = string.Empty;
     
-    public string Value2 { get; }
+    public string Value2 { get; } = string.Empty;
 
     public static OneOf<Success, ValidationErrors> Validate(Validator<ExampleConfigSection> context)
     {
@@ -25,8 +25,8 @@ public class ExampleConfigSection : IConfigSection<ExampleConfigSection>
 public class ExampleConfigValue : IConfigValue<ExampleConfigValue, string, IsCommaArrayOf<IsConnectionString>>
 {
     public static string SectionName { get; } = "ExampleConfigValue";
-    
-    public string Value { get; init; }
+
+    public string Value { get; init; } = string.Empty;
 }
 
 public class ExampleDependency
@@ -46,5 +46,4 @@ public class ExampleDependency
         var value = Value.GetValid();
         var section = Section.GetValid();
     }
-
 }

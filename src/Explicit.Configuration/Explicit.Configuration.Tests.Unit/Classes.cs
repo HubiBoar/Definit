@@ -8,9 +8,9 @@ public class TestSection : IConfigSection<TestSection>
 {
     public static string SectionName { get; } = "testSection";
 
-    public string Value0 { get; init; }
+    public string Value0 { get; init; } = string.Empty;
     
-    public string Value1 { get; init; }
+    public string Value1 { get; init; } = string.Empty;
 
     public static OneOf<Success, ValidationErrors> Validate(Validator<TestSection> context)
     {
@@ -30,5 +30,5 @@ public class TestValue : IConfigValue<TestValue, string, TestValidation>
 {
     public static string SectionName { get; } = "testValue";
 
-    public string Value { get; init; }
+    public string Value { get; init; } = string.Empty;
 }
