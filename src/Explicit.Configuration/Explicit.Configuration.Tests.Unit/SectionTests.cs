@@ -13,7 +13,6 @@ public class SectionTests
     public void GetFromConfigTest()
     {
         //Arrange
-        var services = new ServiceCollection();
         var values = new Dictionary<string, string>
         {
             {"testSection:Value0", "Value0"},
@@ -24,14 +23,49 @@ public class SectionTests
             .Build();
 
         //Act
-        services.AddConfig<TestSection>(configuration);
-        
-        //Assert
         var section = configuration.GetValid<TestSection>();
+       
+        //Assert
         var valid = section.AsT0.ValidValue;
-
         valid.Value0.Should().Be("Value0");
         valid.Value1.Should().Be("Value1");
+    }
+    
+    [Fact]
+    public void GetNullFromConfigTest()
+    {
+        //Arrange
+        var values = new Dictionary<string, string> { };
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(values!)
+            .Build();
+
+        //Act
+        var section = configuration.GetValid<TestSection>();
+
+        //Assert
+
+        section.IsT1.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void GetNullValueFromConfigTest()
+    {
+        //Arrange
+        var values = new Dictionary<string, string>
+        {
+            {"testSection", ""},
+        };
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(values!)
+            .Build();
+
+        //Act
+        var section = configuration.GetValid<TestSection>();
+
+        //Assert
+
+        section.IsT1.Should().BeTrue();
     }
     
     [Fact]
