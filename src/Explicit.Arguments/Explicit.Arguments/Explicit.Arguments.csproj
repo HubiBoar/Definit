@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Title>Explicit.CLI</Title>
-        <Description>Explicit CLI</Description>
+        <Title>Explicit.Arguments</Title>
+        <Description>Startup Arguments from CLI or Configuration</Description>
         <PackageTags>cli</PackageTags>
     </PropertyGroup>
-
+    
     <ItemGroup>
       <ProjectReference Include="..\..\Explicit.Configuration\Explicit.Configuration\Explicit.Configuration.csproj" />
     </ItemGroup>

@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Explicit.Cli\Explicit.Cli.csproj" />
+      <ProjectReference Include="..\Explicit.Arguments\Explicit.Arguments.csproj" />
     </ItemGroup>
 
 </Project>
