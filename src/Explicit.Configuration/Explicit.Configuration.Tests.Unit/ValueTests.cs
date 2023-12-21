@@ -23,8 +23,8 @@ public class ValueTests
         services.AddConfig<TestValue>(configuration);
         
         //Assert
-        var section = configuration.GetValid<string, TestValue>();
-        var valid = (string)section.AsT0.ValidValue;
+        var section = configuration.GetValid<TestValue>();
+        var valid = section.AsT0.ValidValue.Value;
 
         valid.Should().Be("TestValue");
     }

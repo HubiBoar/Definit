@@ -22,9 +22,11 @@ public class ExampleConfigSection : IConfigSection<ExampleConfigSection>
     }
 }
 
-public class ExampleConfigValue : IConfigValue<string, IsCommaArrayOf<IsConnectionString>>
+public class ExampleConfigValue : IConfigValue<ExampleConfigValue, string, IsCommaArrayOf<IsConnectionString>>
 {
     public static string SectionName { get; } = "ExampleConfigValue";
+    
+    public string Value { get; init; }
 }
 
 public class ExampleDependency
@@ -41,8 +43,8 @@ public class ExampleDependency
 
     private void Values()
     {
-        var value = Value.Get<string, ExampleConfigValue>();
-        var section = Section.Get();
+        var value = Value.GetValid();
+        var section = Section.GetValid();
     }
 
 }

@@ -1,17 +1,23 @@
 ﻿using Explicit.Validation;
+using Microsoft.Extensions.Configuration;
 
 namespace Explicit.Configuration;
 
-public interface IConfigValue<TValue> : ISectionName
-{
-}
-
-public interface IConfigValue<TValue, TMethod> : IValidate<TValue>, IConfigValue<TValue>
+public interface IConfigValue<TSelf, TValue, TMethod> : IConfigObject<TSelf>
+    where TSelf : IConfigValue<TSelf, TValue, TMethod>, new()
     where TValue : notnull
     where TMethod : IValidate<TValue>
 {
-    static OneOf<Success, ValidationErrors> IValidate<TValue>.Validate(Validator<TValue> context)
+    public TValue Value { get; init; }
+
+    static IsValid<TSelf> IConfigObject<TSelf>.CreateSection(IConfigurationSection section)
     {
-        return TMethod.Validate(context);
+        var value = section.Get<TValue>()!;
+        return new TSelf { Value = value }.IsValid();
+    }
+
+    static OneOf<Success, ValidationErrors> IValidate<TSelf>.Validate(Validator<TSelf> context)
+    {
+        return TMethod.Validate(new Validator<TValue>(context.Value.Value));
     }
 }

@@ -18,12 +18,17 @@ public class TestSection : IConfigSection<TestSection>
     }
 }
 
-public class TestValue : IConfigValue<string, TestValue>
+public class TestValidation : IValidate<string>
 {
-    public static string SectionName { get; } = "testValue";
-
     public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
     {
         return new Success();
     }
+}
+
+public class TestValue : IConfigValue<TestValue, string, TestValidation>
+{
+    public static string SectionName { get; } = "testValue";
+
+    public string Value { get; init; }
 }

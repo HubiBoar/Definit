@@ -1,21 +1,27 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Explicit.Validation;
+using Microsoft.Extensions.Configuration;
 
 namespace Explicit.Configuration;
 
-public interface IConfigHolder<out TSection>
-    where TSection : ISectionName
+public interface IConfigHolder<TSection>
+    where TSection : IConfigObject<TSection>
 {
-    internal ConfigurationHolder Configuration { get; }
+    IsValid<TSection> GetValid();
 }
 
 internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
-    where TSection : ISectionName
+    where TSection : IConfigObject<TSection>
 {
     public ConfigurationHolder Configuration { get; }
 
     public ConfigHolder(ConfigurationHolder configuration)
     {
         Configuration = configuration;
+    }
+
+    public IsValid<TSection> GetValid()
+    {
+        return TSection.CreateSection(Configuration.Configuration.GetSection(TSection.SectionName));
     }
 }
 
