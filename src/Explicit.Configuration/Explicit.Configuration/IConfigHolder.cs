@@ -12,7 +12,7 @@ public interface IConfigHolder<TSection>
 internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
     where TSection : IConfigObject<TSection>
 {
-    public ConfigurationHolder Configuration { get; }
+    private ConfigurationHolder Configuration { get; }
 
     public ConfigHolder(ConfigurationHolder configuration)
     {
@@ -21,7 +21,7 @@ internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
 
     public IsValid<TSection> GetValid()
     {
-        return TSection.CreateSection(Configuration.Configuration.GetSection(TSection.SectionName));
+        return TSection.GetFromConfiguration(Configuration.Configuration.GetSection(TSection.SectionName));
     }
 }
 

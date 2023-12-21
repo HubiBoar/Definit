@@ -17,6 +17,6 @@ public static class AddConfigExtensions
     public static IsValid<TSection> GetValid<TSection>(this IConfiguration configuration)
         where TSection : IConfigObject<TSection>
     {
-        return TSection.CreateSection(configuration.GetSection(TSection.SectionName));
+        return TSection.GetFromConfiguration(configuration.GetSection(TSection.SectionName));
     }
 }
