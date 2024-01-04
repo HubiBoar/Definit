@@ -14,12 +14,13 @@ public class ValueTests
         {
             {"testValue", "TestValue"},
         };
+        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestValue>();
+        var section = configuration.GetValid<TestValue>(services);
 
         //Assert
         var valid = section.AsT0.ValidValue.Value;
@@ -32,12 +33,13 @@ public class ValueTests
     {
         //Arrange
         var values = new Dictionary<string, string> { };
+        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestValue>();
+        var section = configuration.GetValid<TestValue>(services);
 
         //Assert
 

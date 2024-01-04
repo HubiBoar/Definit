@@ -10,13 +10,16 @@ public static class AddConfigExtensions
     public static void AddConfig<TConfig>(this IServiceCollection services, IConfiguration configuration)
         where TConfig : IConfigObject<TConfig>
     {
-        services.TryAddSingleton(new ConfigurationHolder(configuration));
+        services.TryAddSingleton(provider => new ConfigurationHolder(provider, configuration));
         services.AddSingleton<IConfigHolder<TConfig>, ConfigHolder<TConfig>>();
+        TConfig.RegisterDepedencies(services);
     }
     
-    public static IsValid<TSection> GetValid<TSection>(this IConfiguration configuration)
+    public static IsValid<TSection> GetValid<TSection>(this IConfiguration configuration, IServiceCollection services)
         where TSection : IConfigObject<TSection>
     {
-        return TSection.GetFromConfiguration(configuration.GetSection(TSection.SectionName));
+        using var scope = services.BuildServiceProvider().CreateScope();
+
+        return TSection.GetFromConfiguration(scope.ServiceProvider, configuration.GetSection(TSection.SectionName));
     }
 }

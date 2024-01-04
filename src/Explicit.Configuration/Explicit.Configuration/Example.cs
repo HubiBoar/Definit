@@ -29,21 +29,33 @@ public class ExampleConfigValue : IConfigValue<ExampleConfigValue, string, IsCom
     public string Value { get; init; } = string.Empty;
 }
 
+public sealed class ExampleFeatureName : IFeatureName
+{
+    public static string FeatureName => "ExampleFeatureName";
+}
+
 public class ExampleDependency
 {
     public IConfigHolder<ExampleConfigValue> Value { get; }
 
     public IConfigHolder<ExampleConfigSection> Section { get; }
-    
-    public ExampleDependency(IConfigHolder<ExampleConfigValue> value, IConfigHolder<ExampleConfigSection> section)
+
+    public IConfigHolder<FeatureToggle<ExampleFeatureName>> Feature { get; }
+
+    public ExampleDependency(
+        IConfigHolder<ExampleConfigValue> value,
+        IConfigHolder<ExampleConfigSection> section,
+        IConfigHolder<FeatureToggle<ExampleFeatureName>> feature)
     {
         Value = value;
         Section = section;
+        Feature = feature;
     }
 
     private void Values()
     {
         var value = Value.GetValid();
         var section = Section.GetValid();
+        var enabled = Feature.GetValid();
     }
 }

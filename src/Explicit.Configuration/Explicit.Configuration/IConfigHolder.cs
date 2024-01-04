@@ -21,16 +21,18 @@ internal sealed class ConfigHolder<TSection> : IConfigHolder<TSection>
 
     public IsValid<TSection> GetValid()
     {
-        return TSection.GetFromConfiguration(Configuration.Configuration.GetSection(TSection.SectionName));
+        return TSection.GetFromConfiguration(Configuration.ServiceProvider, Configuration.Configuration.GetSection(TSection.SectionName));
     }
 }
 
 internal class ConfigurationHolder
 {
     public IConfiguration Configuration { get; }
+    public IServiceProvider ServiceProvider { get; }
 
-    public ConfigurationHolder(IConfiguration configuration)
+    public ConfigurationHolder(IServiceProvider serviceProvider, IConfiguration configuration)
     {
+        ServiceProvider = serviceProvider;
         Configuration = configuration;
     }
 }

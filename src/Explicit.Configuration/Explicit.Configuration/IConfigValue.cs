@@ -1,5 +1,6 @@
 ﻿using Explicit.Validation;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Explicit.Configuration;
 
@@ -10,7 +11,7 @@ public interface IConfigValue<TSelf, TValue, TMethod> : IConfigObject<TSelf>
 {
     public TValue Value { get; init; }
 
-    static IsValid<TSelf> IConfigObject<TSelf>.GetFromConfiguration(IConfigurationSection section)
+    static IsValid<TSelf> IConfigObject<TSelf>.GetFromConfiguration(IServiceProvider provider, IConfigurationSection section)
     {
         var value = section.Get<TValue>();
         if (value is null)
@@ -18,6 +19,10 @@ public interface IConfigValue<TSelf, TValue, TMethod> : IConfigObject<TSelf>
             return IsValid<TSelf>.Create(default);
         }
         return new TSelf { Value = value }.IsValid();
+    }
+
+    static void IConfigObject<TSelf>.RegisterDepedencies(IServiceCollection services)
+    {
     }
 
     static SectionValue IConfigObject<TSelf>.ConvertToSection(TSelf value)

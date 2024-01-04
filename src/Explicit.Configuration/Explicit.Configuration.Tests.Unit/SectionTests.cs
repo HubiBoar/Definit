@@ -18,12 +18,13 @@ public class SectionTests
             {"testSection:Value0", "Value0"},
             {"testSection:Value1", "Value1"},
         };
+        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>();
+        var section = configuration.GetValid<TestSection>(services);
        
         //Assert
         var valid = section.AsT0.ValidValue;
@@ -36,12 +37,13 @@ public class SectionTests
     {
         //Arrange
         var values = new Dictionary<string, string> { };
+        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>();
+        var section = configuration.GetValid<TestSection>(services);
 
         //Assert
 
@@ -56,12 +58,13 @@ public class SectionTests
         {
             {"testSection", ""},
         };
+        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>();
+        var section = configuration.GetValid<TestSection>(services);
 
         //Assert
 
