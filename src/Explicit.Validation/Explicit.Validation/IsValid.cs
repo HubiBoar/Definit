@@ -23,6 +23,11 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
         return new IsValid<TValue>(errors);
     }
 
+    public static IsValid<TValue> Error(string error)
+    {
+        return new IsValid<TValue>(new ValidationErrors(error));
+    }
+
     public static IsValid<TValue> Create(TValue? value)
     {
         if (value is null)

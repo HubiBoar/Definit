@@ -3,6 +3,10 @@ using Explicit.Validation.FluentValidation;
 
 namespace Explicit.Configuration;
 
+public interface IExampleConfigSection
+{
+}
+
 public class ExampleConfigSection : IConfigSection<ExampleConfigSection>
 {
     public static string SectionName { get; } = "ExampleConfigSection";
