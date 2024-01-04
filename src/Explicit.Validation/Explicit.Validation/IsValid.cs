@@ -17,6 +17,12 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
         Basic = input.ValidValue;
     }
 
+
+    public static IsValid<TValue> Error(ValidationErrors errors)
+    {
+        return new IsValid<TValue>(errors);
+    }
+
     public static IsValid<TValue> Create(TValue? value)
     {
         if (value is null)

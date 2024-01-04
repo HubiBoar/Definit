@@ -20,6 +20,12 @@ public static class AddConfigExtensions
     {
         using var scope = services.BuildServiceProvider().CreateScope();
 
-        return TSection.GetFromConfiguration(scope.ServiceProvider, configuration.GetSection(TSection.SectionName));
+        var section = configuration.GetSection(TSection.SectionName);
+        if(section.Exists() == false)
+        {
+            return IsValid<TSection>.Error(new ValidationErrors($"Section: [{TSection.SectionName}] Is Missing"));
+        }
+
+        return TSection.GetFromConfiguration(scope.ServiceProvider, section);
     }
 }

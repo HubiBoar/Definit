@@ -34,7 +34,12 @@ public sealed class FeatureToggle<T> : IConfigObject<FeatureToggle<T>>
 
     public static IsValid<FeatureToggle<T>> GetFromConfiguration(IServiceProvider provider, IConfigurationSection section)
     {
-        var isEnabled = provider.GetRequiredService<IFeatureManager>().IsEnabledAsync(T.FeatureName).GetAwaiter().GetResult();
+        var isEnabled = provider
+            .GetRequiredService<IFeatureManager>()
+            .IsEnabledAsync(T.FeatureName)
+            .GetAwaiter()
+            .GetResult();
+
         return new FeatureToggle<T>(isEnabled).IsValid();
     }
 
