@@ -1,8 +1,3 @@
-using Explicit.Validation;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.FeatureManagement;
-
 namespace Explicit.Configuration;
 
 public interface IFeatureName
@@ -10,41 +5,29 @@ public interface IFeatureName
     public static abstract string FeatureName { get; }    
 }
 
-public sealed class FeatureToggle<T> : IConfigObject<FeatureToggle<T>>
+public sealed class FeatureToggle<T> : ISectionName
     where T : IFeatureName
 {
+    public delegate Task<bool> Get();
+
     public static string SectionName => $"FeatureManagement:{T.FeatureName}";
 
-    public bool IsEnabled { get; }
-
-    private FeatureToggle(bool isEnabled)
+    public static void Register(IServiceCollection services)
     {
-        IsEnabled = isEnabled;
+        services.AddSingleton<Get>(provider => () => Create(provider));
     }
 
-    static void IConfigObject<FeatureToggle<T>>.RegisterDepedencies(IServiceCollection services)
+    public static Task<bool> Create(IServiceCollection services)
     {
-        services.AddFeatureManagement();
+        using var scope = services.BuildServiceProvider().CreateScope();
+        
+        return Create(scope.ServiceProvider);
     }
 
-    public static SectionValue ConvertToSection(FeatureToggle<T> value)
+    public static async Task<bool> Create(IServiceProvider provider)
     {
-        return new SectionValue(value.IsEnabled);
-    }
-
-    public static IsValid<FeatureToggle<T>> GetFromConfiguration(IServiceProvider provider, IConfigurationSection section)
-    {
-        var isEnabled = provider
+        return await provider
             .GetRequiredService<IFeatureManager>()
-            .IsEnabledAsync(T.FeatureName)
-            .GetAwaiter()
-            .GetResult();
-
-        return new FeatureToggle<T>(isEnabled).IsValid();
-    }
-
-    public static OneOf<Success, ValidationErrors> Validate(Validator<FeatureToggle<T>> context)
-    {
-        return new Success();
+            .IsEnabledAsync(T.FeatureName);
     }
 }
