@@ -1,4 +1,5 @@
 ﻿using Explicit.Configuration;
+using Explicit.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,11 +13,11 @@ public interface IConfigArgument
 }
 
 public interface IConfigArgument<TSection, TValue> : IConfigArgument, IArgumentProvider<TValue>
-    where TSection :  IConfigObject<TSection>
+    where TSection : IConfigObject<TSection>, IValidate<TSection>
 {
     TValue IArgumentProvider<TValue>.GetValue()
     {
-        return Configuration.GetValid<TSection>(Services).Basic.Match(
+        return TSection.Create(Configuration).Basic.Match(
             Convert,
             errors => throw errors.ToException());
     }

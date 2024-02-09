@@ -1,2 +1,9 @@
 ﻿global using OneOf;
 global using OneOf.Types;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Explicit.Validation;
+global using Explicit.Primitives;
+global using Microsoft.FeatureManagement;
+global using Explicit.Utils;
+global using Explicit.Validation.FluentValidation;

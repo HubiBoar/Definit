@@ -1,7 +1,3 @@
-using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Explicit.Configuration.Tests.Unit;
 
 public class ValueTests
@@ -14,16 +10,15 @@ public class ValueTests
         {
             {"testValue", "TestValue"},
         };
-        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestValue>(services);
+        var section = TestValue.Create(configuration);
 
         //Assert
-        var valid = section.AsT0.ValidValue.Value;
+        var valid = section.AsT0.ValidValue.GetValue();
 
         valid.Should().Be("TestValue");
     }
@@ -33,16 +28,14 @@ public class ValueTests
     {
         //Arrange
         var values = new Dictionary<string, string> { };
-        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestValue>(services);
+        var section = TestValue.Create(configuration);
 
         //Assert
-
         section.IsT1.Should().BeTrue();
     }
     
@@ -60,9 +53,9 @@ public class ValueTests
             .Build();
 
         //Act
-        services.AddConfig<TestValue>(configuration);
+        TestValue.Register(services, configuration);
 
         //Assert
-        services.Should().Contain(x => x.ServiceType == typeof(IConfigHolder<TestValue>));
+        services.Should().Contain(x => x.ServiceType == typeof(TestValue.Get));
     }
 }

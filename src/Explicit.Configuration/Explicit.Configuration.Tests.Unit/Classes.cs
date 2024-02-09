@@ -4,21 +4,21 @@ using OneOf.Types;
 
 namespace Explicit.Configuration.Tests.Unit;
 
-public class TestSection : IConfigSection<TestSection>
+public sealed class TestSection : ConfigSection<TestSection>
 {
-    public static string SectionName { get; } = "testSection";
+    protected override string SectionName { get; } = "testSection";
 
     public string Value0 { get; init; } = string.Empty;
     
     public string Value1 { get; init; } = string.Empty;
 
-    public static OneOf<Success, ValidationErrors> Validate(Validator<TestSection> context)
+    protected override OneOf<Success, ValidationErrors> Validate(Validator<TestSection> context)
     {
         return new Success();
     }
 }
 
-public class TestValidation : IValidate<string>
+public sealed class TestValidation : IValidate<string>
 {
     public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
     {
@@ -26,9 +26,7 @@ public class TestValidation : IValidate<string>
     }
 }
 
-public class TestValue : IConfigValue<TestValue, string, TestValidation>
+public sealed class TestValue : ConfigValue<TestValue, string, TestValidation>
 {
-    public static string SectionName { get; } = "testValue";
-
-    public string Value { get; init; } = string.Empty;
+    protected override string SectionName { get; } = "testValue";
 }

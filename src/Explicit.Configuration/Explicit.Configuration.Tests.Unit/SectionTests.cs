@@ -1,10 +1,3 @@
-using Explicit.Validation;
-using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using OneOf;
-using OneOf.Types;
-
 namespace Explicit.Configuration.Tests.Unit;
 
 public class SectionTests
@@ -18,13 +11,12 @@ public class SectionTests
             {"testSection:Value0", "Value0"},
             {"testSection:Value1", "Value1"},
         };
-        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>(services);
+        var section = TestSection.Create(configuration);
        
         //Assert
         var valid = section.AsT0.ValidValue;
@@ -37,16 +29,14 @@ public class SectionTests
     {
         //Arrange
         var values = new Dictionary<string, string> { };
-        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>(services);
+        var section = TestSection.Create(configuration);
 
         //Assert
-
         section.IsT1.Should().BeTrue();
     }
     
@@ -58,16 +48,14 @@ public class SectionTests
         {
             {"testSection", ""},
         };
-        var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(values!)
             .Build();
 
         //Act
-        var section = configuration.GetValid<TestSection>(services);
+        var section = TestSection.Create(configuration);
 
         //Assert
-
         section.IsT1.Should().BeTrue();
     }
     
@@ -86,9 +74,9 @@ public class SectionTests
             .Build();
 
         //Act
-        services.AddConfig<TestSection>(configuration);
+        TestSection.Register(services, configuration);
 
         //Assert
-        services.Should().Contain(x => x.ServiceType == typeof(IConfigHolder<TestSection>));
+        services.Should().Contain(x => x.ServiceType == typeof(TestSection.Get));
     }
 }
