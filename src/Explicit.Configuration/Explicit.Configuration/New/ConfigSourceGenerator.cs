@@ -74,10 +74,10 @@ public interface IConfigFeatureFlag : IConfigObject2
 {
     public static abstract string FeatureName { get; }
 
-    public static IsValid<Value<bool, IsNotNull<bool>>> GetValid<T>(IConfigHolder2<T> holder)
+    public static async Task<IsValid<Value<bool, IsNotNull<bool>>>> GetValid<T>(IConfigHolder2<T> holder)
         where T : IConfigFeatureFlag
     {
-        var isEnabled = holder.ServiceProvider.GetRequiredService<IFeatureManager>().IsEnabledAsync(T.FeatureName).GetAwaiter().GetResult();
+        var isEnabled = await holder.ServiceProvider.GetRequiredService<IFeatureManager>().IsEnabledAsync(T.FeatureName);
         return new Value<bool, IsNotNull<bool>>(isEnabled).IsValid();
     }
 }
@@ -119,7 +119,7 @@ public static class Extensions
         return IConfigSection<ExampleConfigSection>.GetValid(value);
     }
 
-    public static IsValid<Value<bool, IsNotNull<bool>>> GetValid(this IConfigHolder2<ExampleConfigFeatureFlag> value)
+    public static Task<IsValid<Value<bool, IsNotNull<bool>>>> GetValid(this IConfigHolder2<ExampleConfigFeatureFlag> value)
     {
         return IConfigFeatureFlag.GetValid(value);
     }
