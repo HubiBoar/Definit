@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(Dotnet)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Title>Definit.Validation</Title>
+        <Description>Definit Validation</Description>
+        <PackageTags>validation</PackageTags>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="OneOf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Definit.Utils\Definit.Utils\Definit.Utils.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(Dotnet)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Title>Definit.Primitives</Title>
+        <Description>Definit Primitives</Description>
+        <PackageTags>primitives</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="OneOf" />
+        <PackageReference Include="OneOf.Else" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Definit.Json\Definit.Json\Definit.Json.csproj" />
+      <ProjectReference Include="..\..\Definit.Validation\Definit.Validation\Definit.Validation.csproj" />
+    </ItemGroup>
+
+</Project>

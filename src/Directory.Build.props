@@ -5,9 +5,9 @@
         <PackageTags>library</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageProjectUrl>https://github.com/HubiBoar/Explicit</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/HubiBoar/Definit</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/HubiBoar/Explicit</RepositoryUrl>
+        <RepositoryUrl>https://github.com/HubiBoar/Definit</RepositoryUrl>
     </PropertyGroup>
     
     <ItemGroup>
