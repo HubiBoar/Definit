@@ -30,6 +30,11 @@ public sealed class FromServices<T0, T1, T2> : IFromServices<FromServices<T0, T1
             provider.GetRequiredService<T2>());
     }
 
+    public static implicit operator FromServices<T0, T1, T2>(FromServicesProvider provider)
+    {
+        return Create(provider.Provider);
+    }
+
     public void Deconstruct(
         out T0 value0,
         out T1 value1,

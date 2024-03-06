@@ -25,7 +25,7 @@ public sealed class FromServices<T0, T1> : IFromServices<FromServices<T0, T1>>
             provider.GetRequiredService<T1>());
     }
 
-    public static implicit operator FromServices<T0, T1>(FromServiceProvider provider)
+    public static implicit operator FromServices<T0, T1>(FromServicesProvider provider)
     {
         return Create(provider.Provider);
     }
