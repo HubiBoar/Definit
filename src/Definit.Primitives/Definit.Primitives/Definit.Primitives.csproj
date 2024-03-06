@@ -1,12 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>$(Dotnet)</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <Title>Definit.Primitives</Title>
         <Description>Definit Primitives</Description>
         <PackageTags>primitives</PackageTags>

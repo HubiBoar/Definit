@@ -14,9 +14,15 @@
         <None Include="../../../README.md" Pack="true" PackagePath="" Visible="false" />
         <None Include="../../../LICENSE" Pack="true" PackagePath="" Visible="false" />
     </ItemGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
     
     <PropertyGroup>
-        <Dotnet>net8.0</Dotnet>
+        <MomolithVersion>1.0.0</MomolithVersion>
         <MicrosoftExtensionsVersions>8.0.0</MicrosoftExtensionsVersions>
     </PropertyGroup>
 </Project>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Definit.Endpoint</Title>
+        <Description>Minimal Api Extensions</Description>
+        <PackageTags>api</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Momolith.Modules" />
+    </ItemGroup>
+
+</Project>
