@@ -24,5 +24,6 @@
     <PropertyGroup>
         <MomolithVersion>1.0.0</MomolithVersion>
         <MicrosoftExtensionsVersions>8.0.0</MicrosoftExtensionsVersions>
+        <OneOfElseVersion>1.0.3</OneOfElseVersion>
     </PropertyGroup>
 </Project>

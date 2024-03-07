@@ -1,6 +1,9 @@
 ﻿namespace Definit.Validation;
 
-public record Validator<TValue>(TValue Value);
+public sealed record Validator<TValue>(TValue Value)
+{
+    public delegate OneOf<Success, ValidationErrors> Delegate(Validator<TValue> context);
+}
 
 public interface IValidate<TValue>
 {

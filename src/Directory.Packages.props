@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageVersion Include="Castle.Core" Version="5.1.1" />
     <PackageVersion Include="OneOf" Version="3.0.263" />
-    <PackageVersion Include="OneOf.Else" Version="1.0.1" />
+    <PackageVersion Include="OneOf.Else" Version="$(OneOfElseVersion)" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageVersion Include="morelinq" Version="4.0.0" />
     <PackageVersion Include="FluentValidation" Version="11.8.0" />
