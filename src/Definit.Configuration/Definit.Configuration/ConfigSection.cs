@@ -17,6 +17,11 @@ public abstract class ConfigSectionBase<TSelf> : IConfigObject<TSelf>
                 value => value.IsValid(),
                 IsValid<TSelf>.Error);
     }
+
+    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
+    {
+        return Create(configuration).Success;
+    }
 }
 
 public abstract class ConfigSection<TSelf> : ConfigSectionBase<TSelf>, ISectionName, IValidate<TSelf>

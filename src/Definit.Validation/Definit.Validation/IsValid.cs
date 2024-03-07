@@ -6,15 +6,18 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
     where TValue : IValidate<TValue>
 {
     public OneOf<TValue, ValidationErrors> Basic { get; }
+    public OneOf<Success, ValidationErrors> Success { get; }
 
     private IsValid(ValidationErrors input) : base(input)
     {
         Basic = input;
+        Success = input;
     }
     
     private IsValid(Valid<TValue> input) : base(input)
     {
         Basic = input.ValidValue;
+        Success = new Success();
     }
 
     public static IsValid<TValue> Error(ValidationErrors errors)

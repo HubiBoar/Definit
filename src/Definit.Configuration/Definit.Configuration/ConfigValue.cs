@@ -1,4 +1,9 @@
-﻿namespace Definit.Configuration;
+﻿
+namespace Definit.Configuration;
+
+public interface IConfigValue<TValue> : IValidate<TValue>, ISectionName, IConfigObject
+{
+}
 
 public abstract class ConfigValueBase<TSelf, TValue, TMethod> : IConfigObject<Value<TValue, TMethod>>
     where TSelf : ISectionName
@@ -19,9 +24,19 @@ public abstract class ConfigValueBase<TSelf, TValue, TMethod> : IConfigObject<Va
                 value => new Value<TValue, TMethod>(value).IsValid(),
                 IsValid<Value<TValue, TMethod>>.Error);
     }
+
+    public static OneOf<Success, ValidationErrors> Validate(Validator<TValue> context)
+    {
+        return TMethod.Validate(context);
+    }
+
+    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
+    {
+        return Create(configuration).Success;
+    }
 }
 
-public abstract class ConfigValue<TSelf, TValue, TMethod> : ConfigValueBase<TSelf, TValue, TMethod>, ISectionName
+public abstract class ConfigValue<TSelf, TValue, TMethod> : ConfigValueBase<TSelf, TValue, TMethod>, ISectionName, IConfigValue<TValue> 
     where TSelf : ConfigValue<TSelf, TValue, TMethod>, new()
     where TValue : notnull
     where TMethod : IValidate<TValue>

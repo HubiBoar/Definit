@@ -1,6 +1,11 @@
 ﻿namespace Definit.Configuration;
 
-public interface IConfigObject<TValue>
+public interface IConfigObject
+{
+    public static abstract OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration);
+}
+
+public interface IConfigObject<TValue> : IConfigObject
     where TValue : IValidate<TValue>
 {
     public static abstract IsValid<TValue> Create(IConfiguration configuration);
