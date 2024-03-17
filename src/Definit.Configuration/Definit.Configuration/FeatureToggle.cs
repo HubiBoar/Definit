@@ -18,10 +18,10 @@ public sealed class FeatureToggle<T> : IConfigObject<Value<bool, IsNotNull<bool>
         services.AddFeatureManagement();
         services.AddSingleton<Get>(provider => () => Create(provider));
 
-        return IsValid(configuration);
+        return ValidateConfiguration(configuration);
     }
 
-    public static OneOf<Success, ValidationErrors> IsValid(IConfiguration configuration)
+    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
     {
         var featureName = SectionName;
         var section = configuration.GetSection(featureName);

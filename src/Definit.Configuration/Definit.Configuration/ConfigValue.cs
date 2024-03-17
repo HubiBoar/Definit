@@ -42,7 +42,7 @@ public abstract class ConfigValueBase<TSelf, TValue, TMethod> : IConfigObject<Va
                 IsValid<Value<TValue, TMethod>>.Error);
     }
 
-    public static OneOf<Success, ValidationErrors> IsValid(IConfiguration configuration)
+    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
     {
         return Create(configuration).Success;
     }

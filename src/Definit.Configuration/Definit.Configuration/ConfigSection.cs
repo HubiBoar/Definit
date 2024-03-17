@@ -26,7 +26,7 @@ public abstract class ConfigSectionBase<TSelf> : IConfigObject<TSelf>
         return Create(configuration).Success;
     }
 
-    public static OneOf<Success, ValidationErrors> IsValid(IConfiguration configuration)
+    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
     {
         return Create(configuration).Success;
     }

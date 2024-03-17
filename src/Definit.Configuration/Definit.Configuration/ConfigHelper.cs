@@ -4,7 +4,7 @@ public interface IConfigObject
 {
     public static abstract OneOf<Success, ValidationErrors> Register(IServiceCollection services, IConfiguration configuration);
 
-    public static abstract OneOf<Success, ValidationErrors> IsValid(IConfiguration configuration);
+    public static abstract OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration);
 }
 
 public interface IConfigObject<TValue> : IConfigObject
