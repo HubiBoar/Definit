@@ -42,9 +42,9 @@ internal static class Example
    
     private static void Register(IServiceCollection services, IConfiguration configuration)
     {
-        Section.Register(services, configuration);
+        services.Register<Section>(configuration);
         Value.Register(services, configuration);
-        FeatureToggle<Feature>.Register(services);
+        FeatureToggle<Feature>.Register(services, configuration);
     }
 
     private static async Task Create(IServiceCollection services, IConfiguration configuration)

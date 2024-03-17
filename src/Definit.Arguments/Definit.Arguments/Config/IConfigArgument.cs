@@ -17,7 +17,9 @@ public interface IConfigArgument<TSection, TValue> : IConfigArgument, IArgumentP
 {
     TValue IArgumentProvider<TValue>.GetValue()
     {
-        return TSection.Create(Configuration).Basic.Match(
+        using var scope = Services.BuildServiceProvider().CreateScope();
+
+        return TSection.Create(scope.ServiceProvider, Configuration).Basic.Match(
             Convert,
             errors => throw errors.ToException());
     }
