@@ -10,8 +10,21 @@ public interface IConfigValue<TValue> : IValidate<TValue>, IConfigValue
 {
 }
 
-public abstract class ConfigValueBase<TSelf, TValue, TMethod> : IConfigObject<Value<TValue, TMethod>>
-    where TSelf : ISectionName
+public interface IConfigValue<TValue, TMethod> : IConfigValue<TValue>
+    where TValue : notnull
+    where TMethod : IValidate<TValue>
+{
+    public static IsValid<Value<TValue, TMethod>> Create(IConfiguration configuration, string sectionName)
+    {
+        return ConfigHelper.GetValue<TValue>(configuration, sectionName)
+            .Match(
+                value => new Value<TValue, TMethod>(value).IsValid(),
+                IsValid<Value<TValue, TMethod>>.Error);
+    }
+}
+
+public abstract class ConfigValueBase<TSection, TValue, TMethod> : IConfigObject<Value<TValue, TMethod>>
+    where TSection : ISectionName
     where TValue : notnull
     where TMethod : IValidate<TValue>
 {
@@ -36,10 +49,7 @@ public abstract class ConfigValueBase<TSelf, TValue, TMethod> : IConfigObject<Va
 
     public static IsValid<Value<TValue, TMethod>> Create(IConfiguration configuration)
     {
-        return ConfigHelper.GetValue<TValue>(configuration, TSelf.SectionName)
-            .Match(
-                value => new Value<TValue, TMethod>(value).IsValid(),
-                IsValid<Value<TValue, TMethod>>.Error);
+        return IConfigValue<TValue, TMethod>.Create(configuration, TSection.SectionName);
     }
 
     public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
