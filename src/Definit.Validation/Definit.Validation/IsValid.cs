@@ -1,14 +1,15 @@
 ﻿using Definit.Utils;
+using Definit.Results;
 
 namespace Definit.Validation;
 
-public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
+public sealed class IsValid<TValue> : Result<Valid<TValue>>
     where TValue : IValidate<TValue>
 {
-    public OneOf<TValue, ValidationErrors> Basic { get; }
-    public OneOf<Success, ValidationErrors> Success { get; }
+    public Result<TValue> Basic { get; }
+    public Result Success { get; }
 
-    private IsValid(ValidationErrors input) : base(input)
+    private IsValid(Error input) : base(input)
     {
         Basic = input;
         Success = input;
@@ -17,10 +18,10 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
     private IsValid(Valid<TValue> input) : base(input)
     {
         Basic = input.ValidValue;
-        Success = new Success();
+        Success = Result.Success;
     }
 
-    public static IsValid<TValue> Error(ValidationErrors errors)
+    public static IsValid<TValue> Error(Error errors)
     {
         return new IsValid<TValue>(errors);
     }

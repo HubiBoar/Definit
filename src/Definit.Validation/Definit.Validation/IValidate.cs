@@ -1,4 +1,6 @@
-﻿namespace Definit.Validation;
+﻿using Definit.Results;
+
+namespace Definit.Validation;
 
 public sealed record Validator<TValue>(TValue Value)
 {

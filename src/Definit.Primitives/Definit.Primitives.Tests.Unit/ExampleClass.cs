@@ -1,8 +1,6 @@
 ﻿using Definit.Validation;
 using Definit.Validation.FluentValidation;
-using FluentValidation;
 using OneOf;
-using OneOf.Types;
 
 namespace Definit.Primitives.Tests.Unit;
 

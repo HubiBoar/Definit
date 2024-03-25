@@ -1,5 +1,4 @@
 ﻿global using OneOf;
-global using OneOf.Types;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Definit.Validation;

@@ -1,11 +1,18 @@
 using OneOf;
-using OneOf.Types;
 using OneOf.Else;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Success = OneOf.Types.Success;
 
-namespace Definit.Result;
+namespace Definit.Results;
+
+public sealed class Success
+{
+    public static Success Instance { get; } = new ();
+
+    private Success()
+    {
+    }
+}
 
 public sealed class ErrorContext
 {
@@ -93,36 +100,36 @@ public static class ResultHelper
     {
         var result = await task;
 
-        return result.Match<T>(value => value, error => throw error.ToException());
+        return result.Match(value => value, error => throw error.ToException());
     }
 
     public static T ForceValue<T>(this Result<T> result, ErrorContext context)
     {
-        return result.Match<T>(value => value, error => throw error.ToException());
+        return result.Match(value => value, error => throw error.ToException());
     }
 
     public static async Task<T> ForceValue<T>(this Task<Result<T>> task, ErrorContext context, Func<Error, Error> modifyError)
     {
         var result = await task;
 
-        return result.Match<T>(value => value, error => throw modifyError(error).ToException());
+        return result.Match(value => value, error => throw modifyError(error).ToException());
     }
 
     public static T ForceValue<T>(this Result<T> result, ErrorContext context, Func<Error, Error> modifyError)
     {
-        return result.Match<T>(value => value, error => throw modifyError(error).ToException());
+        return result.Match(value => value, error => throw modifyError(error).ToException());
     }
 
     public static async Task<T> ForceValue<T>(this Task<Result<T>> task, ErrorContext context, Error error)
     {
         var result = await task;
 
-        return result.Match<T>(value => value, _ => throw error.ToException());
+        return result.Match(value => value, _ => throw error.ToException());
     }
 
     public static T ForceValue<T>(this Result<T> result, ErrorContext context, Error error)
     {
-        return result.Match<T>(value => value, _ => throw error.ToException());
+        return result.Match(value => value, _ => throw error.ToException());
     }
 
 
@@ -130,36 +137,46 @@ public static class ResultHelper
     {
         var result = await task;
 
-        return result.Match<Success>(value => value, error => throw error.ToException());
+        return result.Match(value => value, error => throw error.ToException());
     }
 
     public static Success ForceValue(this Result result, ErrorContext context)
     {
-        return result.Match<Success>(value => value, error => throw error.ToException());
+        return result.Match(value => value, error => throw error.ToException());
     }
 
     public static async Task<Success> ForceValue(this Task<Result> task, ErrorContext context, Func<Error, Error> modifyError)
     {
         var result = await task;
 
-        return result.Match<Success>(value => value, error => throw modifyError(error).ToException());
+        return result.Match(value => value, error => throw modifyError(error).ToException());
     }
 
     public static Success ForceValue(this Result result, ErrorContext context, Func<Error, Error> modifyError)
     {
-        return result.Match<Success>(value => value, error => throw modifyError(error).ToException());
+        return result.Match(value => value, error => throw modifyError(error).ToException());
     }
 
     public static async Task<Success> ForceValue(this Task<Result> task, ErrorContext context, Error error)
     {
         var result = await task;
 
-        return result.Match<Success>(value => value, _ => throw error.ToException());
+        return result.Match(value => value, _ => throw error.ToException());
     }
 
     public static Success ForceValue(this Result result, ErrorContext context, Error error)
     {
-        return result.Match<Success>(value => value, _ => throw error.ToException());
+        return result.Match(value => value, _ => throw error.ToException());
+    }
+
+    public static Results<Ok, BadRequest<string>> OkOrBadRequest<T>(this Result<T> result)
+    {
+        return result.Match<Results<Ok, BadRequest<string>>>(ok => TypedResults.Ok(), error => TypedResults.BadRequest(error.Message));
+    }
+
+    public static Results<Ok<T>, BadRequest<string>> OkOrBadRequestResult<T>(this Result<T> result)
+    {
+        return result.Match<Results<Ok<T>, BadRequest<string>>>(ok => TypedResults.Ok(ok), error => TypedResults.BadRequest(error.Message));
     }
 }
 
@@ -206,7 +223,7 @@ public sealed class Error
 
     public BadRequest<string> ToBadRequest()
     {
-        return TypedResults.BadRequest<string>(Message);
+        return TypedResults.BadRequest(Message);
     }
 
     public ErrorException ToException()
@@ -220,44 +237,39 @@ public sealed class Error
     }
 }
 
-public sealed partial class Result : OneOfBase<Success, Error>
+public partial class Result : Result<Success>
 {
-    public static Result Success { get; } = new Result(new Success()); 
-
-    public Success? SuccessValue { get; }
-    public Error? Error { get; }
-    public bool Successful { get; }
+    public static Result Success { get; } = new Result(Results.Success.Instance); 
 
     public Result(Success value) : base(value)
     {
-        SuccessValue = value;
-        Successful = true;
     }
 
     public Result(Error error) : base(error)
     {
-        Error = error;
-        Successful = false;
+    }
+    
+    public Result(OneOf<Success, Error> oneOf) : base(oneOf)
+    {
     }
 
-    public OneOfElse<Error> IsSuccess()
-    {
-        return this.Is(out Success _);
+    public Result(OneOfBase<Success, Error> oneOf) : base(oneOf)
+    { 
     }
 
-    public OneOfElse<Error> IsSuccess(out Success success)
+    public static Result Create<T>(OneOf<T, Error> oneOf)
     {
-        return this.Is(out success);
+        return new Result(oneOf.Match<OneOf<Success, Error>>(_ => Results.Success.Instance, e => e));
     }
 
-    public OneOfElse<Success> IsError()
+    public static Result Create<T>(OneOfBase<T, Error> oneOf)
     {
-        return this.Is(out Error _);
+        return new Result(oneOf.Match<OneOf<Success, Error>>(_ => Results.Success.Instance, e => e));
     }
-
-    public OneOfElse<Success> IsError(out Error error)
+    
+    public static implicit operator Result(Success success)
     {
-        return this.Is(out error);
+        return new Result(success);
     }
 
     public static implicit operator Result(Error error)
@@ -267,19 +279,19 @@ public sealed partial class Result : OneOfBase<Success, Error>
 
     public static implicit operator Result(Exception exception)
     {
-        return new Result(new Error(exception));
+        return new Result(exception);
     }
 
-    public Results<Ok, BadRequest<string>> OkOrBadRequest()
+    public static implicit operator Result(OneOf<Success, Error> oneOf)
     {
-        return this.Match<Results<Ok, BadRequest<string>>>(success => TypedResults.Ok(), error => TypedResults.BadRequest<string>(error.Message));
+        return new Result(oneOf);
     }
 }
 
-public sealed partial class Result<T> : OneOfBase<T, Error>
+public partial class Result<T> : OneOfBase<T, Error>
 {
     public T? SuccessValue { get; }
-    public Error? Error { get; }
+    public Error? ErrorValue { get; }
     public bool Successful { get; }
 
     public Result(T value) : base(value)
@@ -290,18 +302,36 @@ public sealed partial class Result<T> : OneOfBase<T, Error>
 
     public Result(Error error) : base(error)
     {
-        Error = error;
+        ErrorValue = error;
         Successful = false;
+    }
+
+    public Result(OneOf<T, Error> oneOf) : base(oneOf)
+    {
+        if(oneOf.Is(out T value).Else(out var error))
+        {
+            SuccessValue = value;
+            Successful = true;
+        }
+        else
+        {
+            ErrorValue = error;
+            Successful = false;
+        }
+    }
+
+    public Result(OneOfBase<T, Error> oneOf) : this(oneOf.Match<OneOf<T, Error>>(v => v, e => e))
+    {
     }
 
     public Result<TOut> Match<TOut>(Func<T, Result<TOut>> func)
     {
-        return Result<TOut>.Try(() => this.Match<Result<TOut>>(x => func(x), error => error));
+        return Result<TOut>.Try(() => Match(x => func(x), error => error));
     }
 
     public Task<Result<TOut>> Match<TOut>(Func<T, Task<Result<TOut>>> func)
     {
-        return Result<TOut>.Try(() => this.Match<Task<Result<TOut>>>(x => func(x), error => Task.FromResult<Result<TOut>>(error)));
+        return Result<TOut>.Try(() => Match(x => func(x), error => Task.FromResult<Result<TOut>>(error)));
     }
 
     public OneOfElse<Error> IsSuccess()
@@ -324,6 +354,11 @@ public sealed partial class Result<T> : OneOfBase<T, Error>
         return this.Is(out error);
     }
     
+    public static implicit operator Result(Result<T> result)
+    {
+        return Result.Create(result);
+    }
+
     public static implicit operator Result<T>(T value)
     {
         return new Result<T>(value);
@@ -336,21 +371,16 @@ public sealed partial class Result<T> : OneOfBase<T, Error>
 
     public static implicit operator Result<T>(Exception exception)
     {
-        return new Result<T>(new Error(exception));
+        return new Result<T>(exception);
     }
 
-    public Results<Ok, BadRequest<string>> OkOrBadRequestEmpty()
+        public static implicit operator Result<T>(OneOf<T, Error> oneOf)
     {
-        return this.Match<Results<Ok, BadRequest<string>>>(ok => TypedResults.Ok(), error => TypedResults.BadRequest<string>(error.Message));
-    }
-
-    public Results<Ok<T>, BadRequest<string>> OkOrBadRequest()
-    {
-        return this.Match<Results<Ok<T>, BadRequest<string>>>(ok => TypedResults.Ok(ok), error => TypedResults.BadRequest<string>(error.Message));
+        return new Result<T>(oneOf);
     }
 }
 
-public sealed partial class Result
+public partial class Result
 {
     public static Result Try(Func<Result> func) => ResultHelper.Return(func, ex => ex);
 
@@ -419,7 +449,7 @@ public sealed partial class Result
     public static Task<Result> Try(Func<ErrorContext, Task> func, Func<Exception, Error> onException) => Try(() => func(ErrorContext.Instance), onException);
 }
 
-public sealed partial class Result<T>
+public partial class Result<T>
 {
     public static Result<T> Try(Func<Result<T>> func) => ResultHelper.Return(func, ex => ex);
 

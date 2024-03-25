@@ -1,6 +1,5 @@
 ﻿using Definit.Validation;
 using OneOf;
-using OneOf.Types;
 
 namespace Definit.Configuration.Tests.Unit;
 
