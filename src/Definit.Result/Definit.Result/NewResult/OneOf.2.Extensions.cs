@@ -1,0 +1,13 @@
+namespace Definit.NewResults;
+
+public static class OneOf2Extensions
+{
+    public static Task<TOut> Match<TOut, T0, T1>(this IOneOf<T0, T1> oneOf, Func<T0, Task<TOut>> onT0, Func<T1, Task<TOut>> onT1) => oneOf.Match(onT0, onT1);
+    public static Task<TOut> Match<TOut, T0, T1>(this IOneOf<T0, T1> oneOf, Func<T0, TOut> onT0, Func<T1, Task<TOut>> onT1)       => oneOf.Match(onT0.ToTask(), onT1);
+    public static Task<TOut> Match<TOut, T0, T1>(this IOneOf<T0, T1> oneOf, Func<T0, Task<TOut>> onT0, Func<T1, TOut> onT1)       => oneOf.Match(onT0, onT1.ToTask());
+
+
+    public static Task Switch<T0, T1>(this IOneOf<T0, T1> oneOf, Func<T0, Task> onT0, Func<T1, Task> onT1) => oneOf.Match(onT0, onT1);
+    public static Task Switch<T0, T1>(this IOneOf<T0, T1> oneOf, Func<T0, Task> onT0, Action<T1> onT1)     => oneOf.Match(onT0, onT1.ToTask());
+    public static Task Switch<T0, T1>(this IOneOf<T0, T1> oneOf, Action<T0> onT0, Func<T1, Task> onT1)     => oneOf.Match(onT0.ToTask(), onT1);
+}

@@ -31,7 +31,7 @@ file static class ExampleClass
     }
 
     
-    private static void Example3(OneOf<Value1, Value2, Value3> oneOf)
+    private static async Task Example3(OneOf<Value1, Value2, Value3> oneOf)
     {
         if(oneOf.Is(out Value2 value2).Else(out var value1))
         {
@@ -42,5 +42,7 @@ file static class ExampleClass
         {
 
         }
+
+        await oneOf.Match(v1 => CheckAsync(), v2 => Check(), v3 => Check());
     }
 }

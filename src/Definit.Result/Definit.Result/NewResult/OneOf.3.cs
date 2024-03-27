@@ -1,6 +1,6 @@
 namespace Definit.NewResults;
 
-public class OneOf<T0, T1, T2> : IOneOf<T0, T1, T2>
+public class OneOf<T0, T1, T2> : IOneOf<T0, T1, T2>, IOneOfT0<T0, OneOf<T1, T2>>, IOneOfT1<T1, OneOf<T0, T2>>, IOneOfT2<T2, OneOf<T0, T1>>
     where T0 : notnull
     where T1 : notnull
     where T2 : notnull
@@ -50,28 +50,6 @@ public class OneOf<T0, T1, T2> : IOneOf<T0, T1, T2>
     };
 
     public void Switch(Action<T0> onT0, Action<T1> onT1, Action<T2> onT2) => Match(v => { onT0(v); return Value; }, v => { onT1(v); return Value; }, v => { onT2(v); return Value; });
-
-
-    public Task<T> Match<T>(Func<T0, Task<T>> onT0, Func<T1, Task<T>> onT1, Func<T2, Task<T>> onT2) => Match<Task<T>>(onT0, onT1, onT2);
-
-    public Task<T> Match<T>(Func<T0, T> onT0, Func<T1, Task<T>> onT1, Func<T2, Task<T>> onT2) => Match<Task<T>>(onT0.ToTask(), onT1, onT2);
-    public Task<T> Match<T>(Func<T0, Task<T>> onT0, Func<T1, T> onT1, Func<T2, Task<T>> onT2) => Match<Task<T>>(onT0, onT1.ToTask(), onT2);
-    public Task<T> Match<T>(Func<T0, Task<T>> onT0, Func<T1, Task<T>> onT1, Func<T2, T> onT2) => Match<Task<T>>(onT0, onT1, onT2.ToTask());
-
-    public Task<T> Match<T>(Func<T0, T> onT0, Func<T1, T> onT1, Func<T2, Task<T>> onT2) => Match<Task<T>>(onT0.ToTask(), onT1.ToTask(), onT2);
-    public Task<T> Match<T>(Func<T0, Task<T>> onT0, Func<T1, T> onT1, Func<T2, T> onT2) => Match<Task<T>>(onT0, onT1.ToTask(), onT2.ToTask());
-    public Task<T> Match<T>(Func<T0, T> onT0, Func<T1, Task<T>> onT1, Func<T2, T> onT2) => Match<Task<T>>(onT0.ToTask(), onT1, onT2.ToTask());
-
-
-    public Task Switch<T>(Func<T0, Task> onT0, Func<T1, Task> onT1, Func<T2, Task> onT2) => Match(onT0, onT1, onT2);
-
-    public Task Switch<T>(Action<T0> onT0, Func<T1, Task> onT1, Func<T2, Task> onT2) => Match(onT0.ToTask(), onT1, onT2);
-    public Task Switch<T>(Func<T0, Task> onT0, Action<T1> onT1, Func<T2, Task> onT2) => Match(onT0, onT1.ToTask(), onT2);
-    public Task Switch<T>(Func<T0, Task> onT0, Func<T1, Task> onT1, Action<T2> onT2) => Match(onT0, onT1, onT2.ToTask());
-
-    public Task Switch<T>(Action<T0> onT0, Action<T1> onT1, Func<T2, Task> onT2) => Match(onT0.ToTask(), onT1.ToTask(), onT2);
-    public Task Switch<T>(Func<T0, Task> onT0, Action<T1> onT1, Action<T2> onT2) => Match(onT0, onT1.ToTask(), onT2.ToTask());
-    public Task Switch<T>(Action<T0> onT0, Func<T1, Task> onT1, Action<T2> onT2) => Match(onT0.ToTask(), onT1, onT2.ToTask());
 
     public bool TryGetValue(out T0 value) => IOneOf.TryGetValue(this, 0, out value);
     public bool TryGetValue(out T1 value) => IOneOf.TryGetValue(this, 1, out value);
