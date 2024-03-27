@@ -1,23 +1,15 @@
 namespace Definit.NewResults;
 
-public class OneOf<T0, T1> : IOneOfT0<T0, T1>
+public class OneOf<T0, T1> : IOneOf<T0, T1>, IOneOfT0<T0, T1>
     where T0 : notnull
     where T1 : notnull
 {
     public int Index { get; }
     public object Value { get; }
 
-    public OneOf(T0 value)
-    {
-        Index = 0;
-        Value = value;
-    }
-
-    public OneOf(T1 value)
-    {
-        Index = 1;
-        Value = value;
-    }
+    protected OneOf(int index, object value) { Index = index; Value = value; }
+    public OneOf(T0 value) : this(0, value) {}
+    public OneOf(T1 value) : this(1, value) {}
 
     public static implicit operator OneOf<T0, T1>(T0 value) => new (value);
     public static implicit operator OneOf<T0, T1>(T1 value) => new (value);

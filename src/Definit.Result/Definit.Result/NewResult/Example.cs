@@ -12,7 +12,7 @@ file static class ExampleClass
         return new Value1();
     }
 
-    private static async Task<OneOf<Value1, Value2, Value3>> Example2(OneOf<Value1, Value3> oneOf)
+    private static async Task<OneOf<Value1, Value2, Value3>> Example2(OneOf<Value3, Value1> oneOf)
     {
         var result = await oneOf.Match(v1 => CheckAsync(), v2 => Check());
 
@@ -29,7 +29,6 @@ file static class ExampleClass
     {
         return new Value1();
     }
-
     
     private static async Task Example3(OneOf<Value1, Value2, Value3> oneOf)
     {

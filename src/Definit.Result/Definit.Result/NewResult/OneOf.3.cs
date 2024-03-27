@@ -1,6 +1,11 @@
 namespace Definit.NewResults;
 
-public class OneOf<T0, T1, T2> : IOneOf<T0, T1, T2>, IOneOfT0<T0, OneOf<T1, T2>>, IOneOfT1<T1, OneOf<T0, T2>>, IOneOfT2<T2, OneOf<T0, T1>>
+public interface IOneOfFull<T0, T1, T2> :  IOneOf<T0, T1, T2>, IOneOfT0<T0, OneOf<T1, T2>>, IOneOfT1<T1, OneOf<T0, T2>>, IOneOfT2<T2, OneOf<T0, T1>>
+    where T0 : notnull
+    where T1 : notnull
+    where T2 : notnull {}
+
+public class OneOf<T0, T1, T2> : IOneOfFull<T0, T1, T2>
     where T0 : notnull
     where T1 : notnull
     where T2 : notnull
@@ -30,9 +35,12 @@ public class OneOf<T0, T1, T2> : IOneOf<T0, T1, T2>, IOneOfT0<T0, OneOf<T1, T2>>
     public static implicit operator OneOf<T0, T1, T2>(T1 value) => new (value);
     public static implicit operator OneOf<T0, T1, T2>(T2 value) => new (value);
 
-    public static implicit operator OneOf<T0, T1, T2>(OneOf<T1, T2> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
     public static implicit operator OneOf<T0, T1, T2>(OneOf<T0, T2> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
     public static implicit operator OneOf<T0, T1, T2>(OneOf<T0, T1> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
+    public static implicit operator OneOf<T0, T1, T2>(OneOf<T1, T2> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
+    public static implicit operator OneOf<T0, T1, T2>(OneOf<T1, T0> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
+    public static implicit operator OneOf<T0, T1, T2>(OneOf<T2, T1> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
+    public static implicit operator OneOf<T0, T1, T2>(OneOf<T2, T0> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t);
 
     public static implicit operator OneOf<T0, T1, T2>(OneOf<T0, T2, T1> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t, t => t);
     public static implicit operator OneOf<T0, T1, T2>(OneOf<T1, T2, T0> value) => value.Match<OneOf<T0, T1, T2>>(t => t, t => t, t => t);
