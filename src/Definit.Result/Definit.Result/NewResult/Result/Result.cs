@@ -12,6 +12,7 @@ public sealed class Success
 public partial class Result : Result<Success>
 {
     public static Result Success { get; } = new Result(NewResults.Success.Instance);
+    public static Task<Result> SuccessTask { get; } = new Result(NewResults.Success.Instance);
 
     private Result(Success value) : base(value) {}
     public Result(Error error)   : base(error) {}
