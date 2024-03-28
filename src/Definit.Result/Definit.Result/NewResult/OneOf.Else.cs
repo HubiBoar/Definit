@@ -1,4 +1,4 @@
-namespace Definit.NewResults;
+namespace Definit.NewResultsOneOf;
 
 public delegate bool TryGetValueDelegate<T>(out T value);
 

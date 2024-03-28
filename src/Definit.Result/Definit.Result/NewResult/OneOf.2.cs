@@ -1,4 +1,4 @@
-namespace Definit.NewResults;
+namespace Definit.NewResultsOneOf;
 
 public class OneOf<T0, T1> : IOneOf<T0, T1>, IOneOfT0<T0, T1>
     where T0 : notnull

@@ -1,4 +1,4 @@
-namespace Definit.NewResults;
+namespace Definit.NewResultsOneOf;
 
 public static class OneOf3Extensions
 {
