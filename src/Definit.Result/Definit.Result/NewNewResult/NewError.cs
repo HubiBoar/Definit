@@ -8,11 +8,20 @@ public interface IError
     public Error ToError();
 }
 
+public sealed class TryContext
+{
+    internal static TryContext Instance { get; } = new ();
+
+    private TryContext()
+    {
+    }
+}
+
 public sealed class ErrorException : Exception
 {
     public Error Error { get; }
 
-    public ErrorException(Error error) : base($"{nameof(ErrorException)} :: {error.Message}")
+    public ErrorException(Error error, TryContext context) : base($"{nameof(ErrorException)} :: {error.Message}")
     {
         Error = error;
     }
@@ -46,7 +55,7 @@ public class Error : IError
         }
     }
 
-    public ErrorException ToException() => new (this);
+    public ErrorException ToException(TryContext context) => new (this, context);
 
     public static implicit operator Error(Exception exception) => new (exception);
 }

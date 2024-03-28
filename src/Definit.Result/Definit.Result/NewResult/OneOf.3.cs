@@ -1,4 +1,4 @@
-namespace Definit.NewResults;
+namespace Definit.NewResultsOneOf;
 
 public interface IOneOfFull<T0, T1, T2> :  IOneOf<T0, T1, T2>, IOneOfT0<T0, OneOf<T1, T2>>, IOneOfT1<T1, OneOf<T0, T2>>, IOneOfT2<T2, OneOf<T0, T1>>
     where T0 : notnull
@@ -91,5 +91,15 @@ public class OneOf<T0, T1, T2> : IOneOfFull<T0, T1, T2>
         }
 
         return IOneOf.TryGetValue(this, 2, v => (T2)v, out value);
+    }
+
+    public T Match<T>(Func<T0, T> onT0, Func<T1, T> onT1, Func<T2, T> onT2, Func<Exception, T> onException)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Switch(Action<T0> onT0, Action<T1> onT1, Action<T2> onT2, Action<Exception> onException)
+    {
+        throw new NotImplementedException();
     }
 }
