@@ -14,7 +14,11 @@
 				"ms-dotnettools.csharp",
 				"ms-azuretools.vscode-docker",
 				"yzhang.markdown-all-in-one",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+				"jeff-hykin.macro-commander",
+				"vintharas.learn-vim",
+				"vscodevim.vim",
+				"kevin-kwong.vscode-autohide-keyboard"
 			]
 		}
 	}
