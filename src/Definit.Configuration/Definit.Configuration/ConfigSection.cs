@@ -11,7 +11,8 @@ public abstract class ConfigSectionBase<TSelf> : IConfigObject<TSelf>
         return ConfigHelper.GetValue<TSelf>(configuration, TSelf.SectionName)
             .Match(
                 value => value.IsValid(),
-                IsValid<TSelf>.Error);
+                error => error,
+                error => error);
     }
 
     public static IsValid<TSelf> Create(IServiceProvider _, IConfiguration configuration)
@@ -19,14 +20,14 @@ public abstract class ConfigSectionBase<TSelf> : IConfigObject<TSelf>
         return Create(configuration);
     }
 
-    public static OneOf<Success, ValidationErrors> Register(IServiceCollection services, IConfiguration configuration)
+    public static ValidationResult Register(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<Get>(provider => () => Create(configuration));
 
         return Create(configuration).Success;
     }
 
-    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
+    public static ValidationResult ValidateConfiguration(IConfiguration configuration)
     {
         return Create(configuration).Success;
     }
@@ -36,10 +37,10 @@ public abstract class ConfigSection<TSelf> : ConfigSectionBase<TSelf>, ISectionN
     where TSelf : ConfigSection<TSelf>, new()
 {
     protected abstract string SectionName { get; }
-    protected abstract OneOf<Success, ValidationErrors> Validate(Validator<TSelf> context);
+    protected abstract ValidationResult Validate(Validator<TSelf> context);
 
     static string ISectionName.SectionName => new TSelf().SectionName;
-    static OneOf<Success, ValidationErrors> IValidate<TSelf>.Validate(Validator<TSelf> context) => new TSelf().Validate(context);
+    static ValidationResult IValidate<TSelf>.Validate(Validator<TSelf> context) => new TSelf().Validate(context);
 }
 
 public static class ConfigSection

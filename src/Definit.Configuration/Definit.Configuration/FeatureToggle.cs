@@ -13,7 +13,7 @@ public sealed class FeatureToggle<T> : IConfigObject<Value<bool, IsNotNull<bool>
 
     public delegate Task<bool> Get();
 
-    public static OneOf<Success, ValidationErrors> Register(IServiceCollection services, IConfiguration configuration)
+    public static ValidationResult Register(IServiceCollection services, IConfiguration configuration)
     {
         services.AddFeatureManagement();
         services.AddSingleton<Get>(provider => () => Create(provider));
@@ -21,17 +21,24 @@ public sealed class FeatureToggle<T> : IConfigObject<Value<bool, IsNotNull<bool>
         return ValidateConfiguration(configuration);
     }
 
-    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
+    public static ValidationResult ValidateConfiguration(IConfiguration configuration)
     {
-        var featureName = SectionName;
-        var section = configuration.GetSection(featureName);
-
-        if(section is null)
+        try
         {
-            return new ValidationErrors($"Missing FeatureToggle :: [{featureName}]");
-        }
+            var featureName = SectionName;
+            var section = configuration.GetSection(featureName);
 
-        return new Success();
+            if(section is null)
+            {
+                return new ValidationErrors(SectionName, $"Missing FeatureToggle");
+            }
+
+            return ValidationResult.Success;
+        }
+        catch(Exception exception)
+        {
+            return exception;
+        }
     }
 
     public static Task<bool> Create(IServiceCollection services)

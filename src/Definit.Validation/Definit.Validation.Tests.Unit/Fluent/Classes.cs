@@ -6,7 +6,7 @@ namespace Definit.Validation.Tests.Unit.Fluent;
 
 public sealed class IsValue0 : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
         return context.FluentRule(r => r.NotEmpty().MaximumLength(2));
     }
@@ -14,7 +14,7 @@ public sealed class IsValue0 : IValidate<string>
 
 public sealed class IsValue1 : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
         return context.FluentRule(r => r.NotEmpty().MinimumLength(3).MaximumLength(3));
     }
@@ -28,7 +28,7 @@ internal class ExampleClass : IValidate<ExampleClass>
 
     public required Value<string, IsCommaArrayOf<IsValue0>> CommaArray { get; init; }
 
-    public static OneOf<Success, ValidationErrors> Validate(Validator<ExampleClass> context)
+    public static ValidationResult Validate(Validator<ExampleClass> context)
     {
         return context.Fluent(validator =>
         {

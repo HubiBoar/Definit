@@ -1,40 +1,69 @@
-﻿namespace Definit.Validation;
+﻿using Definit.Results;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Logging;
 
-public sealed record ValidationErrors
+namespace Definit.Validation;
+
+public sealed record ValidationErrors : IApiLogError<ValidationProblem>
 {
-    public IReadOnlyCollection<string> ErrorMessages { get; }
+    public static readonly string IgnorePropertyName = string.Empty;
 
-    public string Message => $"ValidationErrors: {string.Join(", ", ErrorMessages)}";
+    public IDictionary<string, string[]> Errors { get; }
 
-    public ValidationErrors(IReadOnlyCollection<string> errorMessages)
+    public StackTrace StackTrace { get; } = new ();
+
+    public string Message { get; }
+    public string Description { get; }
+
+    public ValidationErrors(IDictionary<string, string[]> errors)
     {
-        ErrorMessages = errorMessages;
+        Errors = errors;
+        Description = string.Join(" ", Errors.Select(x =>
+        {
+            var value = string.Join(" ", x.Value);
+
+            if(x.Key != IgnorePropertyName)
+            {
+                return $"[{x.Key}] => {value}";
+            }
+            else
+            {
+                return value;
+            }
+        }));
+        Message = $"ValidationErrors: {Description}";
     }
     
-    public ValidationErrors(IReadOnlyCollection<ValidationErrors> errors)
-    {
-        ErrorMessages = errors.SelectMany(x => x.ErrorMessages).ToArray();
-    }
+    public ValidationErrors(IReadOnlyCollection<ValidationErrors> errors) : this(
+        errors
+            .SelectMany(x => x.Errors)
+            .GroupBy(x => x.Key)
+            .ToDictionary(x => x.Key, x => x
+                .SelectMany(y => y.Value)
+                .ToArray())) {}
 
-    public ValidationErrors(params string[] errorMessages)
-    {
-        ErrorMessages = errorMessages;
-    }
+    public ValidationErrors((string PropertyName, string ErrorMessage)[] errors) : this(
+        errors
+            .GroupBy(x => x.PropertyName)
+            .ToDictionary(x => x.Key, x => x
+                .Select(y => y.ErrorMessage)
+                .ToArray())) {}
+
+    public ValidationErrors(string propertyName, string errorMessage) : this([(propertyName, errorMessage)]) {}
 
     public static ValidationErrors Null(string propertyName)
     {
-        return new ValidationErrors($"Property: {propertyName} is null");
+        return new ValidationErrors(propertyName, $"Property: {propertyName} is null");
     }
 
-    public DefinitValidationException ToException()
+    public ValidationProblem ToApiResult()
     {
-        return new DefinitValidationException(this);
+        return TypedResults.ValidationProblem(Errors);
     }
-}
 
-public class DefinitValidationException : Exception
-{
-    public DefinitValidationException(ValidationErrors errors) : base($"ValidationException: {errors.Message}")
+    public void Log(ILogger logger)
     {
+        logger.LogError(Message);
     }
 }

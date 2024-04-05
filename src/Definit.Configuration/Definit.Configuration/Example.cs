@@ -15,7 +15,7 @@ internal static class Example
         
         public string Value2 { get; } = string.Empty;
 
-        protected override OneOf<Success, ValidationErrors> Validate(Validator<Section> context)
+        protected override ValidationResult Validate(Validator<Section> context)
         {
             return context.Fluent(validator =>
             {

@@ -18,8 +18,9 @@ public interface IConfigValue<TValue, TMethod> : IConfigValue<TValue>
     {
         return ConfigHelper.GetValue<TValue>(configuration, sectionName)
             .Match(
-                value => new Value<TValue, TMethod>(value).IsValid(),
-                IsValid<Value<TValue, TMethod>>.Error);
+                value => value.IsValid<TValue, TMethod>(),
+                error => error,
+                error => error);
     }
 }
 
@@ -30,7 +31,7 @@ public abstract class ConfigValueBase<TSection, TValue, TMethod> : IConfigObject
 {
     public delegate IsValid<Value<TValue, TMethod>> Get();
 
-    public static OneOf<Success, ValidationErrors> Validate(Validator<TValue> context)
+    public static ValidationResult Validate(Validator<TValue> context)
     {
         return TMethod.Validate(context);
     }
@@ -40,7 +41,7 @@ public abstract class ConfigValueBase<TSection, TValue, TMethod> : IConfigObject
         return Create(configuration);
     }
 
-    public static OneOf<Success, ValidationErrors> Register(IServiceCollection services, IConfiguration configuration)
+    public static ValidationResult Register(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<Get>(provider => () => Create(configuration));
 
@@ -52,7 +53,7 @@ public abstract class ConfigValueBase<TSection, TValue, TMethod> : IConfigObject
         return IConfigValue<TValue, TMethod>.Create(configuration, TSection.SectionName);
     }
 
-    public static OneOf<Success, ValidationErrors> ValidateConfiguration(IConfiguration configuration)
+    public static ValidationResult ValidateConfiguration(IConfiguration configuration)
     {
         return Create(configuration).Success;
     }

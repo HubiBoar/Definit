@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Definit.Results;
+using FluentAssertions;
 
 namespace Definit.Validation.Tests.Unit.Fluent;
 
@@ -19,8 +20,8 @@ public class FluentValidateExampleClassTest
         var result = ExampleClass.Validate(new Validator<ExampleClass>(example));
 
         //Assert
-        result.IsT0.Should().BeTrue();
-        result.IsT1.Should().BeFalse();
+        ((bool)result.Is(out Success _)).Should().BeTrue();
+        ((bool)result.Is(out ValidationErrors _)).Should().BeFalse();
     }
     
     [Fact]
@@ -36,19 +37,24 @@ public class FluentValidateExampleClassTest
 
         //Act
         var result = ExampleClass.Validate(new Validator<ExampleClass>(example));
-        var errors = result.AsT1;
-        var errorMessages = errors.ErrorMessages.ToArray();
 
         //Assert
-        result.IsT0.Should().BeFalse();
-        result.IsT1.Should().BeTrue();
+        ((bool)result.Is(out Success _)).Should().BeFalse();
+        ((bool)result.Is(out ValidationErrors errors)).Should().BeTrue();
 
-        errors.Message.Should().Be("ValidationErrors: [Value0] The length of 'Value' must be 2 characters or fewer. You entered 3 characters., [Value1] The length of 'Value' must be at least 3 characters. You entered 1 characters., [Comma Array] [Value[0]] The length of 'Value' must be 2 characters or fewer. You entered 3 characters., [Comma Array] [Value[2]] The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
+        Console.WriteLine(errors.Message);
+        Console.WriteLine("CJHUIJ");
+        Console.WriteLine(errors.Errors["CommaArray"][0]);
 
-        errorMessages.Length.Should().Be(4);
-        errorMessages[0].Should().Be("[Value0] The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
-        errorMessages[1].Should().Be("[Value1] The length of 'Value' must be at least 3 characters. You entered 1 characters.");
-        errorMessages[2].Should().Be("[Comma Array] [Value[0]] The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
-        errorMessages[3].Should().Be("[Comma Array] [Value[2]] The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
+        errors.Message.Should().Be("""ValidationErrors: [Value0] => The length of 'Value' must be 2 characters or fewer. You entered 3 characters. [Value1] => The length of 'Value' must be at least 3 characters. You entered 1 characters. [CommaArray] => (Index:0) The length of 'Value' must be 2 characters or fewer. You entered 3 characters. (Index:2) The length of 'Value' must be 2 characters or fewer. You entered 3 characters.""");
+
+        errors.Errors.Count.Should().Be(3);
+        errors.Errors["Value0"].Length.Should().Be(1);
+        errors.Errors["Value1"].Length.Should().Be(1);
+        errors.Errors["CommaArray"].Length.Should().Be(1);
+
+        errors.Errors["Value0"][0].Should().Be("The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
+        errors.Errors["Value1"][0].Should().Be("The length of 'Value' must be at least 3 characters. You entered 1 characters.");
+        errors.Errors["CommaArray"][0].Should().Be("(Index:0) The length of 'Value' must be 2 characters or fewer. You entered 3 characters. (Index:2) The length of 'Value' must be 2 characters or fewer. You entered 3 characters.");
     }
 }

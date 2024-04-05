@@ -1,29 +1,40 @@
 ﻿using Definit.Utils;
+using Definit.Results;
+using OneOf.Else;
+using Error = Definit.Results.Error;
 
 namespace Definit.Validation;
 
-public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
+public sealed class IsValid<TValue> : ResultBase<Valid<TValue>, ValidationErrors>
     where TValue : IValidate<TValue>
 {
-    public OneOf<TValue, ValidationErrors> Basic { get; }
-    public OneOf<Success, ValidationErrors> Success { get; }
+    public Result<TValue, ValidationErrors> Basic { get; }
+    public ValidationResult Success { get; }
 
-    private IsValid(ValidationErrors input) : base(input)
+    private IsValid(OneOf<Valid<TValue>, ValidationErrors, Error> result) : base(result)
     {
-        Basic = input;
-        Success = input;
-    }
-    
-    private IsValid(Valid<TValue> input) : base(input)
-    {
-        Basic = input.ValidValue;
-        Success = new Success();
+        Basic   = result.Match<Result<TValue, ValidationErrors>>(x => x.ValidValue, e => e, e => e);
+        Success = result.Match(x => ValidationResult.Success, e => e, e => e);
     }
 
-    public static IsValid<TValue> Error(ValidationErrors errors)
+    public OneOfElse<OneOf<ValidationErrors, Error>> Is(out TValue value)
     {
-        return new IsValid<TValue>(errors);
+        var result = Is(out Valid<TValue> valid);
+
+        value = default!;
+        if(result)
+        {
+            value = valid.ValidValue;
+        }
+
+        return result;
     }
+
+    public IsValid(Valid<TValue> value) : this((OneOf<Valid<TValue>, ValidationErrors, Error>)value) {}
+    public IsValid(Error error)         : this((OneOf<Valid<TValue>, ValidationErrors, Error>)error) {}
+
+    public static implicit operator IsValid<TValue> (Error value)            => new (value);
+    public static implicit operator IsValid<TValue> (ValidationErrors value) => new (value);
 
     public static IsValid<TValue> Null()
     {
@@ -38,8 +49,9 @@ public sealed class IsValid<TValue> : OneOfBase<Valid<TValue>, ValidationErrors>
         }
         
         var context = new Validator<TValue>(value);
-        return TValue.Validate(context).Match<IsValid<TValue>>(
+        return TValue.Validate(context).Match(
             success => new IsValid<TValue>(new Valid<TValue>(value)),
+            validationError => new IsValid<TValue>(validationError),
             error => new IsValid<TValue>(error));
     }
 }

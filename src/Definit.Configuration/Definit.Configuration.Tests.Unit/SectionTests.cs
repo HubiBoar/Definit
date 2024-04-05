@@ -19,7 +19,7 @@ public class SectionTests
         var section = TestSection.Create(configuration);
        
         //Assert
-        var valid = section.AsT0.ValidValue;
+        section.Is(out TestSection valid);
         valid.Value0.Should().Be("Value0");
         valid.Value1.Should().Be("Value1");
     }
@@ -37,7 +37,7 @@ public class SectionTests
         var section = TestSection.Create(configuration);
 
         //Assert
-        section.IsT1.Should().BeTrue();
+        ((bool)section.Is(out ValidationErrors _)).Should().BeTrue();
     }
     
     [Fact]
@@ -56,7 +56,7 @@ public class SectionTests
         var section = TestSection.Create(configuration);
 
         //Assert
-        section.IsT1.Should().BeTrue();
+        ((bool)section.Is(out ValidationErrors _)).Should().BeTrue();
     }
     
     [Fact]

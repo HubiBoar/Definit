@@ -1,33 +1,35 @@
-﻿namespace Definit.Validation.Tests.Unit.Validation;
+﻿using Definit.Results;
+
+namespace Definit.Validation.Tests.Unit.Validation;
 
 internal sealed class ValidatableSuccessClass : IValidate<ValidatableSuccessClass>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<ValidatableSuccessClass> context)
+    public static ValidationResult Validate(Validator<ValidatableSuccessClass> context)
     {
-        return new Success();
+        return Success.Instance;
     }
 }
 
 internal sealed class ValidatableErrorClass : IValidate<ValidatableErrorClass>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<ValidatableErrorClass> context)
+    public static ValidationResult Validate(Validator<ValidatableErrorClass> context)
     {
-        return new ValidationErrors();
+        return new ValidationErrors("Example", "Example");
     }
 }
 
 internal sealed class ValidatableSuccessMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
-        return new Success();
+        return Success.Instance;
     }
 }
 
 internal sealed class ValidatableErrorMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
-        return new ValidationErrors();
+        return new ValidationErrors("Example", "Example");
     }
 }

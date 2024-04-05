@@ -1,3 +1,5 @@
+using Definit.Primitives;
+
 namespace Definit.Configuration.Tests.Unit;
 
 public class ValueTests
@@ -18,7 +20,7 @@ public class ValueTests
         var section = TestValue.Create(configuration);
 
         //Assert
-        var valid = section.AsT0.ValidValue.GetValue();
+        section.Is(out string valid);
 
         valid.Should().Be("TestValue");
     }
@@ -36,7 +38,7 @@ public class ValueTests
         var section = TestValue.Create(configuration);
 
         //Assert
-        section.IsT1.Should().BeTrue();
+        ((bool)section.Is(out ValidationErrors _)).Should().BeTrue();
     }
     
     [Fact]

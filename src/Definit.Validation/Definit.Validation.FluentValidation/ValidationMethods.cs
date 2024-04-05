@@ -9,7 +9,7 @@ public interface IValidationRule<in TValue>
 
 public sealed class IsConnectionString : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
         return context.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
@@ -17,7 +17,7 @@ public sealed class IsConnectionString : IValidate<string>
 
 public sealed class IsEmail : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
+    public static ValidationResult Validate(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
@@ -25,7 +25,7 @@ public sealed class IsEmail : IValidate<string>
 
 public sealed class IsUrl : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
+    public static ValidationResult Validate(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.IsUrl());
     }
@@ -34,7 +34,7 @@ public sealed class IsUrl : IValidate<string>
 public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
     where TMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
+    public static ValidationResult Validate(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
@@ -55,7 +55,7 @@ public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
 public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
     where TMethod : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
+    public static ValidationResult Validate(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
@@ -73,7 +73,7 @@ public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
 
 public sealed class IsNotEmpty : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> ruleBuilder)
+    public static ValidationResult Validate(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotEmpty().NotNull());
     }
@@ -82,7 +82,7 @@ public sealed class IsNotEmpty : IValidate<string>
 public sealed class IsNotNull<TValue> : IValidate<TValue>
     where TValue : notnull
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<TValue> ruleBuilder)
+    public static ValidationResult Validate(Validator<TValue> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotNull());
     }

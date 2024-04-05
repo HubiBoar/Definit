@@ -24,13 +24,12 @@ public static class ValidateExtensions
         where TValue : notnull
         where TMethod : IValidate<TValue>
     {
-        return builder.Custom((validatable, context) =>
+        return builder.Custom((property, context) =>
         {
-            var errors = validatable.IsValid<TValue, TMethod>().Match<IReadOnlyCollection<string>>(
-                _ => Array.Empty<string>(),
-                errors => errors.ErrorMessages);
-            
-            errors.ForEach(error => context.AddFailure($"[{context.DisplayName}] {error}"));
+            if(property.IsValid<TValue, TMethod>().Is(out ValidationErrors errors))
+            {
+                context.AddFailure(errors.Description);
+            }
         });
     }
 
@@ -51,11 +50,16 @@ public static class ValidateExtensions
     {
         collection.ForEach((property, propertyIndex) =>
         {
-            var errors = property.IsValid<TValue, TMethod>().Match<IReadOnlyCollection<string>>(
-                success => Array.Empty<string>(),
-                errors => errors.ErrorMessages);
-
-            errors.ForEach(error => context.AddFailure($"[{context.DisplayName}[{propertyIndex}]] {error}"));
+            if(property.IsValid<TValue, TMethod>().Is(out ValidationErrors errors))
+            {                    
+                foreach(var error in errors.Errors)
+                {
+                    foreach(var value in error.Value)
+                    {
+                        context.AddFailure(context.DisplayName, $"(Index:{propertyIndex}) {value}");
+                    }
+                }
+            }
         });
     }
 }

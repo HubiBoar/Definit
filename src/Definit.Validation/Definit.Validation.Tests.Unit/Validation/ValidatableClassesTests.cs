@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Definit.Results;
+using FluentAssertions;
 
 namespace Definit.Validation.Tests.Unit.Validation;
 
@@ -14,8 +15,8 @@ public class ValidatableClassesTests
         var result = ValidatableSuccessClass.Validate(new Validator<ValidatableSuccessClass>(validatable));
 
         //Assert
-        result.IsT0.Should().BeTrue();
-        result.IsT1.Should().BeFalse();
+        ((bool)result.Is(out Success _)).Should().BeTrue();
+        ((bool)result.Is(out ValidationErrors _)).Should().BeFalse();
     }
     
     [Fact]
@@ -28,8 +29,8 @@ public class ValidatableClassesTests
         var result = ValidatableErrorClass.Validate(new Validator<ValidatableErrorClass>(validatable));
 
         //Assert
-        result.IsT0.Should().BeFalse();
-        result.IsT1.Should().BeTrue();
+        ((bool)result.Is(out Success _)).Should().BeFalse();
+        ((bool)result.Is(out ValidationErrors _)).Should().BeTrue();
     }
     
     [Fact]
@@ -42,10 +43,10 @@ public class ValidatableClassesTests
         var result = validatable.IsValid();
 
         //Assert
-        result.IsT0.Should().BeTrue();
-        result.AsT0.ValidValue.Should().Be(validatable);
+        ((bool)result.Is(out ValidatableSuccessClass valid)).Should().BeTrue();
+        valid.Should().Be(validatable);
 
-        result.IsT1.Should().BeFalse();
+        ((bool)result.Is(out ValidationErrors _)).Should().BeFalse();
     }
     
     [Fact]
@@ -58,9 +59,9 @@ public class ValidatableClassesTests
         var result = validatable.IsValid();
 
         //Assert
-        result.IsT0.Should().BeFalse();
+        ((bool)result.Is(out ValidatableErrorClass _)).Should().BeFalse();
 
-        result.IsT1.Should().BeTrue();
-        result.AsT1.Should().NotBeNull();
+        ((bool)result.Is(out ValidationErrors errors)).Should().BeTrue();
+        errors.Should().NotBeNull();
     }
 }

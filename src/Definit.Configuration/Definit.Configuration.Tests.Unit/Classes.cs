@@ -1,8 +1,4 @@
-﻿using Definit.Validation;
-using OneOf;
-using OneOf.Types;
-
-namespace Definit.Configuration.Tests.Unit;
+﻿namespace Definit.Configuration.Tests.Unit;
 
 public sealed class TestSection : ConfigSection<TestSection>
 {
@@ -12,17 +8,17 @@ public sealed class TestSection : ConfigSection<TestSection>
     
     public string Value1 { get; init; } = string.Empty;
 
-    protected override OneOf<Success, ValidationErrors> Validate(Validator<TestSection> context)
+    protected override ValidationResult Validate(Validator<TestSection> context)
     {
-        return new Success();
+        return ValidationResult.Success;
     }
 }
 
 public sealed class TestValidation : IValidate<string>
 {
-    public static OneOf<Success, ValidationErrors> Validate(Validator<string> context)
+    public static ValidationResult Validate(Validator<string> context)
     {
-        return new Success();
+        return ValidationResult.Success;
     }
 }
 
