@@ -13,6 +13,8 @@ public sealed partial class Result : ResultBase<Success>
     public static implicit operator Result(Error value)     => new (value);
     public static implicit operator Result(Exception value) => new (value);
 
+    public static implicit operator Result(Result<Success> value)       => value.Match(v => Success, e => e);
+    public static implicit operator Result<Success>(Result value)       => value.Match(v => Success, e => e);
     public static implicit operator Result(OneOf<Success, Error> value) => value.Match<Result>(x => x, x => x);
 
     public static implicit operator Task<Result>(Result value) => Task.FromResult(value);

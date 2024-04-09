@@ -1,40 +1,36 @@
 ﻿using System.Text.Json;
+using Definit.Primitives;
 
 namespace Definit.Validation.FluentValidation;
 
-public interface IValidationRule<in TValue>
+public sealed record IsConnectionString : ValidationMethod<IsConnectionString, string>
 {
-    public static abstract void SetupRule<TFrom>(IRuleBuilder<TFrom, TValue> builder);
-}
-
-public sealed class IsConnectionString : IValidate<string>
-{
-    public static ValidationResult Validate(Validator<string> context)
+    protected override ValidationResult Validation(Validator<string> context)
     {
         return context.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
 }
 
-public sealed class IsEmail : IValidate<string>
+public sealed record IsEmail : ValidationMethod<IsEmail, string>
 {
-    public static ValidationResult Validate(Validator<string> ruleBuilder)
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotEmpty().MinimumLength(4));
     }
 }
 
-public sealed class IsUrl : IValidate<string>
+public sealed record IsUrl : ValidationMethod<IsUrl, string>
 {
-    public static ValidationResult Validate(Validator<string> ruleBuilder)
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.IsUrl());
     }
 }
 
-public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
+public sealed record IsJsonArrayOf<TMethod> : ValidationMethod<IsJsonArrayOf<TMethod>, string>
     where TMethod : IValidate<string>
 {
-    public static ValidationResult Validate(Validator<string> ruleBuilder)
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
@@ -52,10 +48,10 @@ public sealed class IsJsonArrayOf<TMethod> : IValidate<string>
     }
 }
 
-public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
+public sealed record IsCommaArrayOf<TMethod> : ValidationMethod<IsCommaArrayOf<TMethod>, string>
     where TMethod : IValidate<string>
 {
-    public static ValidationResult Validate(Validator<string> ruleBuilder)
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.Custom((array, context) =>
         {
@@ -71,18 +67,18 @@ public sealed class IsCommaArrayOf<TMethod> : IValidate<string>
     }
 }
 
-public sealed class IsNotEmpty : IValidate<string>
+public sealed record IsNotEmpty : ValidationMethod<IsNotEmpty, string>
 {
-    public static ValidationResult Validate(Validator<string> ruleBuilder)
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotEmpty().NotNull());
     }
 }
 
-public sealed class IsNotNull<TValue> : IValidate<TValue>
+public sealed record IsNotNull<TValue> : ValidationMethod<IsNotNull<TValue>, TValue>
     where TValue : notnull
 {
-    public static ValidationResult Validate(Validator<TValue> ruleBuilder)
+    protected override ValidationResult Validation(Validator<TValue> ruleBuilder)
     {
         return ruleBuilder.FluentRule(r => r.NotNull());
     }

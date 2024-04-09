@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Definit.Validation.Tests.Unit.Fluent;
 
-public sealed class IsValue0 : IValidate<string>
+public sealed record IsValue0 : ValidationMethod<IsValue0, string>
 {
-    public static ValidationResult Validate(Validator<string> context)
+    protected override ValidationResult Validation(Validator<string> context)
     {
         return context.FluentRule(r => r.NotEmpty().MaximumLength(2));
     }
@@ -22,7 +22,7 @@ public sealed class IsValue1 : IValidate<string>
 
 internal class ExampleClass : IValidate<ExampleClass>
 {
-    public required Value<string, IsValue0> Value0 { get; init; }
+    public required IsValue0.Value Value0 { get; init; }
     
     public required Value<string, IsValue1> Value1 { get; init; }
 

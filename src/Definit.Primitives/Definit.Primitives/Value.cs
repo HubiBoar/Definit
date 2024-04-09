@@ -4,8 +4,14 @@ using Newtonsoft.Json;
 
 namespace Definit.Primitives;
 
+public interface IValue<TValue>
+    where TValue : notnull
+{
+    public TValue GetValue();
+}
+
 [SystemJsonStaticConverter]
-public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>, IJsonStaticConvertable<Value<TValue, TMethod>>
+public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>, IJsonStaticConvertable<Value<TValue, TMethod>>, IValue<TValue>
     where TValue : notnull
     where TMethod : IValidate<TValue>
 {
@@ -24,7 +30,6 @@ public sealed class Value<TValue, TMethod> : IValidate<Value<TValue, TMethod>>, 
     }
 
     public static implicit operator Value<TValue, TMethod>(TValue value) => new (value);
-
     public static implicit operator TValue(Value<TValue, TMethod> self)  => self._value;
 
     public static string ToJson(Value<TValue, TMethod> value) => JsonConvert.SerializeObject(value!._value);
