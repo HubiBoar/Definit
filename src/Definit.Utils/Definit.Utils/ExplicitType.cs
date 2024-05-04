@@ -11,4 +11,6 @@ public static class DefinitType
     {
         return typeof(TType).GetTypeVerboseName();
     }
+
+    public static Task<T> AsTask<T>(this T value) => Task.FromResult(value);    
 }
