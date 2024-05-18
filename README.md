@@ -46,7 +46,7 @@ internal class ExampleClass : IValidate<ExampleClass>
 
 ## Definit.Result
 
-#### Method returning result
+#### Method returns result
 ```csharp
 private static Result<string> HelloWorld(bool isError)
 {
