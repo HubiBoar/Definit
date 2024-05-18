@@ -214,6 +214,7 @@ private static void Check(FluentValidationClass validate)
 
 private static void Run(Valid<FluentValidationClass> valid)
 {
+    //only accepts validated values
 }
 ```
 
