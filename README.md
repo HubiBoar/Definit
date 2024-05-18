@@ -2,7 +2,7 @@
 
 [![Release Status](https://img.shields.io/github/actions/workflow/status/HubiBoar/Definit/publish.yml)](https://github.com/HubiBoar/Definit/actions/workflows/publish.yml)
 
-**Definit** Is a set of libraries aiming to help solve common tasks such as Options/Configuration, Endpoints, Dependencies, Primitives, Errors/Results, Validation etc.
+**Definit** Is a set of libraries aiming to help streamline working on common tasks such as Options/Configuration, Endpoints, Dependencies, Primitives, Errors/Results, Validation etc.
 
 ## Definit.Result
 
