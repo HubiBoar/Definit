@@ -2,48 +2,6 @@
 
 **Definit** Is a set of libraries aiming to help solve common tasks such as Options/Configuration, Endpoints, Dependencies, Primitives, Errors/Results, Validation etc.
 
-## [Definit.Validation](src/Definit.Validation/Definit.Validation.Tests.Unit/Fluent/Classes.cs)
-
-```csharp
-public sealed record IsValue0 : ValidationMethod<IsValue0, string>
-{
-    protected override ValidationResult Validation(Validator<string> context)
-    {
-        return context.FluentRule(r => r.NotEmpty().MaximumLength(2));
-    }
-}
-
-public sealed class IsValue1 : IValidate<string>
-{
-    public static ValidationResult Validate(Validator<string> context)
-    {
-        return context.FluentRule(r => r.NotEmpty().MinimumLength(3).MaximumLength(3));
-    }
-}
-
-internal class ExampleClass : IValidate<ExampleClass>
-{
-    public required IsValue0.Value Value0 { get; init; }
-    
-    public required Value<string, IsValue1> Value1 { get; init; }
-
-    public required Value<string, IsCommaArrayOf<IsValue0>> CommaArray { get; init; }
-
-    public static ValidationResult Validate(Validator<ExampleClass> context)
-    {
-        return context.Fluent(validator =>
-        {
-            validator.RuleFor(x => x.Value0).ValidateSelf();
-
-            validator.RuleFor(x => x.Value1).ValidateSelf();
-
-            validator.RuleFor(x => x.CommaArray).ValidateSelf();
-        });
-    }
-}
-```
-
-
 ## Definit.Result
 
 #### Method returns result
@@ -168,7 +126,71 @@ private static Result<string, int> Example(int value)
 }
 ```
 
+## [Definit.Validation](src/Definit.Validation/Definit.Validation.Tests.Unit/Fluent/Classes.cs)
 
+```csharp
+public sealed class DefaultValidation : IValidate<string>
+{
+    public static ValidationResult Validate(Validator<string> context)
+    {
+        if(context.Value.Length > 2)
+        {
+            return ValidationResult.Success;
+        }
+
+        return new ValidationErrors("Length <= 2");
+    }
+}
+
+public sealed class FluentValidation : IValidate<string>
+{
+    public static ValidationResult Validate(Validator<string> context)
+    {
+        return context.FluentRule(r => r.NotEmpty().MinimumLength(3).MaximumLength(3));
+    }
+}
+
+internal class FluentValidationClass : IValidate<ExampleClass>
+{
+    public required string Value0 { get; init; }
+    
+    public required string Value1 { get; init; }
+
+    public required int Value2 { get; init; }
+
+    public static ValidationResult Validate(Validator<ExampleClass> context)
+    {
+        return context.Fluent(validator =>
+        {
+            validator.RuleFor(x => x.Value0).NotEmpty();
+
+            validator.RuleFor(x => x.Value1).NotEmpty();
+
+            validator.RuleFor(x => x.CommaArray).NotNull();
+        });
+    }
+}
+```
+
+## [Definit.Primitives](src/Definit.Primitives/Definit.Primitives.Tests.Unit/ExampleClass.cs)
+```csharp
+internal class ExampleClass : IValidate<ExampleClass>
+{
+    public required Value<string, IsConnectionString> ConnectionString { get; init; }
+    
+    public required Value<string, IsEmail> Email { get; init; }
+
+    public static ValidationResult Validate(Validator<ExampleClass> context)
+    {
+        return context.Fluent(validator =>
+        {
+            validator.RuleFor(x => x.ConnectionString).ValidateSelf();
+
+            validator.RuleFor(x => x.Email).ValidateSelf();
+        });
+    }
+}
+```
 
 ## [Definit.Configuration](src/Definit.Configuration/Definit.Configuration/Example.cs)
 
@@ -246,9 +268,6 @@ private static async Task Create(IServiceCollection services, IConfiguration con
     var isEnabled = await FeatureToggle<Feature>.Create(services);
 }
 ```
-
-
-## [Definit.Primitives](src/Definit.Primitives/Definit.Primitives.Tests.Unit/ExampleClass.cs)
 
 
 ## Definit.Dependencies
