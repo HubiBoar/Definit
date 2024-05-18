@@ -127,6 +127,49 @@ private static async Task ExampleAsync()
 }
 ```
 
+#### Different result Types
+```csharp
+private static Result Example(bool isError)
+{
+    if(isError)
+    {
+        return new Error("Hello Error");
+    }
+
+    return Result.Success;
+}
+
+private static Result.Or<string> Example(int value)
+{
+    if(value == -1)
+    {
+        return new Error("Hello Error");
+    }
+    else if(value == 1)
+    {
+        return "string";
+    }
+
+    return Result.Success;
+}
+
+private static Result<string, int> Example(int value)
+{
+    if(value == -1)
+    {
+        return new Error("Hello Error");
+    }
+    else if(value == 1)
+    {
+        return "string";
+    }
+
+    return 5;
+}
+```
+
+
+
 ## [Definit.Configuration](src/Definit.Configuration/Definit.Configuration/Example.cs)
 
 [![NuGet Version](https://img.shields.io/nuget/v/Definit.Configuration)](https://www.nuget.org/packages/Definit.Configuration/)
