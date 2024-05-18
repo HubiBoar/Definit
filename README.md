@@ -1,10 +1,13 @@
 # Definit
 
+[![Release Status](https://img.shields.io/github/actions/workflow/status/HubiBoar/Definit/publish.yml)](https://github.com/HubiBoar/Definit/actions/workflows/publish.yml)
+
 **Definit** Is a set of libraries aiming to help solve common tasks such as Options/Configuration, Endpoints, Dependencies, Primitives, Errors/Results, Validation etc.
 
 ## Definit.Result
 
 [![NuGet Version](https://img.shields.io/nuget/v/Definit.Result)](https://www.nuget.org/packages/Definit.Result/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Result)](https://www.nuget.org/packages/Definit.Result/)
 
 **Definit.Result** Is a library aiming to help with exception handling by using a Result/Error pattern with a easy to use API.
 
@@ -147,6 +150,7 @@ private static Result<string, int> Example(int value)
 ## [Definit.Validation](src/Definit.Validation/Definit.Validation.Tests.Unit/Fluent/Classes.cs)
 
 [![NuGet Version](https://img.shields.io/nuget/v/Definit.Validation)](https://www.nuget.org/packages/Definit.Validation/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Validation)](https://www.nuget.org/packages/Definit.Validation/)
 
 **Definit.Validation** Is a library aiming to help adding Validation to classes, it also supports FluentValidation out of the box.
 
@@ -220,11 +224,29 @@ private static void Run(Valid<FluentValidationClass> valid)
 
 ## [Definit.Primitives](src/Definit.Primitives/Definit.Primitives.Tests.Unit/ExampleClass.cs)
 
-[![NuGet Version](https://img.shields.io/nuget/v/Definit.Validation)](https://www.nuget.org/packages/Definit.Validation/)
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Primitives)](https://www.nuget.org/packages/Definit.Primitives/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Primitives)](https://www.nuget.org/packages/Definit.Primitives/)
 
-**Definit.Validation** Is a library aiming to help adding Validation to classes, it also supports FluentValidation out of the box.
+**Definit.Primitives** Is a library aiming to help working with Primitives, making them Validatable by default.
 
 ```csharp
+
+public sealed record IsConnectionString : ValidationMethod<IsConnectionString, string>
+{
+    protected override ValidationResult Validation(Validator<string> context)
+    {
+        return context.FluentRule(r => r.NotEmpty().MinimumLength(4));
+    }
+}
+
+public sealed record IsEmail : ValidationMethod<IsEmail, string>
+{
+    protected override ValidationResult Validation(Validator<string> ruleBuilder)
+    {
+        return ruleBuilder.FluentRule(r => r.NotEmpty().MinimumLength(4));
+    }
+}
+
 internal class ExampleClass : IValidate<ExampleClass>
 {
     public required Value<string, IsConnectionString> ConnectionString { get; init; }
@@ -241,13 +263,33 @@ internal class ExampleClass : IValidate<ExampleClass>
         });
     }
 }
+
+private static void Check(string validate)
+{
+    if(validate
+        .IsValid<string, IsConnectionString>(out var validValue)
+        .Else(out var errors))
+    {
+        Run(validValue);
+    }
+
+    if(errors
+        .Is(out ValidationErrors validationErrors)
+        .Else(out Error error))
+    {
+        //print validationErrors
+    }
+
+    //print error;
+}
 ```
 
 ## [Definit.Configuration](src/Definit.Configuration/Definit.Configuration/Example.cs)
 
 [![NuGet Version](https://img.shields.io/nuget/v/Definit.Configuration)](https://www.nuget.org/packages/Definit.Configuration/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Configuration)](https://www.nuget.org/packages/Definit.Configuration/)
 
-**Definit.Configuration** Is a library helping to 
+**Definit.Configuration** Is a library helping to work with Configuration, making them Validatable by default.
 
 #### Value
 ```csharp
@@ -323,17 +365,32 @@ private static async Task Create(IServiceCollection services, IConfiguration con
 
 ## Definit.Dependencies
 
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Dependencies)](https://www.nuget.org/packages/Definit.Dependencies/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Dependencies)](https://www.nuget.org/packages/Definit.Dependencies/)
+
+**Definit.Dependencies** Is a library helping to work with Dependencies, similar to how MinimalApi works.
+
 ```csharp
-private Result Handle(Request request, FromServices<Dependency1, Dependency2> dependencies)
+private static Result Handle(FromServices<Dependency1, Dependency2> dependencies)
 {
     var (dep1, dep2) = dependencies;
 
     return Result.Success;
 }
+
+private static void Run(IServiceProvider provider)
+{
+    Handle(provider.From());
+}
 ```
 
 
 ## Definit.Endpoint
+
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Endpoint)](https://www.nuget.org/packages/Definit.Endpoint/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Endpoint)](https://www.nuget.org/packages/Definit.Endpoint/)
+
+**Definit.Endpoint** Is a library helping to work with MinimalApi.
 
 ```csharp
 private static Endpoint Endpoint => Map.Get("test", (int age) => 
@@ -343,6 +400,11 @@ private static Endpoint Endpoint => Map.Get("test", (int age) =>
 ```
 
 ## [Definit.Json](https://github.com/HubiBoar/Definit/blob/main/src/Definit.Primitives/Definit.Primitives.Tests.Unit/NewtonsoftTests.cs)
+
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Json)](https://www.nuget.org/packages/Definit.Json/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Definit.Json)](https://www.nuget.org/packages/Definit.Json/)
+
+**Definit.Json** Is a library helping to work with Json, by forcing objects to describe how they should be Serialized.
 
 ```csharp
 [SystemJsonStaticConverter]
@@ -360,4 +422,6 @@ public sealed record Example(string Value) : IJsonStaticConvertable<Example>
 }
 ```
 
-Definit.Utils
+## License
+
+The code in this repo is licensed under the [MIT](LICENSE) license.
