@@ -64,7 +64,7 @@ private static void Example()
 
 private static Task ExampleAsync()
 {
-  if(await (HelloWorldAsync(true))
+  if((await HelloWorldAsync(true))
       .Is(out Error error)
       .Else(out var success))
   {
