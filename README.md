@@ -4,26 +4,44 @@
 
 ## Definit.Result
 
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Result)](https://www.nuget.org/packages/Definit.Result/)
+
+**Definit.Result** Is a library aiming to help with exception handling by using a Result/Error pattern with a easy to use API.
+
 #### Method returns result
 ```csharp
 private static Result<string> HelloWorld(bool isError)
 {
-    if(isError)
+    try
     {
-        return new Error("Hello Error");
+        if(isError)
+        {
+            return new Error("Hello Error");
+        }
+    
+        return "Hello World";
     }
-
-    return "Hello World";
+    catch(Exception exception)
+    {
+        return exception;
+    }
 }
 
 private static async Task<Result<string>> HelloWorldAsync(bool isError)
 {
-    if(isError)
+    try
     {
-        return new Error("Hello Error");
+        if(isError)
+        {
+            return new Error("Hello Error");
+        }
+    
+        return "Hello World";
     }
-
-    return "Hello World";
+    catch(Exception exception)
+    {
+        return exception;
+    }
 }
 ```
 
@@ -128,6 +146,10 @@ private static Result<string, int> Example(int value)
 
 ## [Definit.Validation](src/Definit.Validation/Definit.Validation.Tests.Unit/Fluent/Classes.cs)
 
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Validation)](https://www.nuget.org/packages/Definit.Validation/)
+
+**Definit.Validation** Is a library aiming to help adding Validation to classes, it also supports FluentValidation out of the box.
+
 ```csharp
 public sealed class DefaultValidation : IValidate<string>
 {
@@ -170,9 +192,37 @@ internal class FluentValidationClass : IValidate<ExampleClass>
         });
     }
 }
+
+private static void Check(FluentValidationClass validate)
+{
+    if(validate
+        .IsValid(out var validValue)
+        .Else(out var errors))
+    {
+        Run(validValue);
+    }
+
+    if(errors
+        .Is(out ValidationErrors validationErrors)
+        .Else(out Error error))
+    {
+        //print validationErrors
+    }
+
+    //print error;
+}
+
+private static void Run(Valid<FluentValidationClass> valid)
+{
+}
 ```
 
 ## [Definit.Primitives](src/Definit.Primitives/Definit.Primitives.Tests.Unit/ExampleClass.cs)
+
+[![NuGet Version](https://img.shields.io/nuget/v/Definit.Validation)](https://www.nuget.org/packages/Definit.Validation/)
+
+**Definit.Validation** Is a library aiming to help adding Validation to classes, it also supports FluentValidation out of the box.
+
 ```csharp
 internal class ExampleClass : IValidate<ExampleClass>
 {
